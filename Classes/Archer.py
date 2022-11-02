@@ -1,0 +1,25 @@
+from ..CharacterCreation import EnemyUnit
+
+class Archer(EnemyUnit):
+    def __init__(self):
+        EnemyUnit.EnemyUnit.__init__(self)
+        self._class = "Archer"
+        self.HP = 18
+        self.STR = 4
+        self.DEF = 3
+        self.RES = 0
+        self.SPD = 3
+        self.SKL = 3
+        self.MOV = 7
+        self.HP_Growth = 0.70
+        self.STR_Growth = 0.35
+        self.DEF_Growth = 0.15
+        self.RES_Growth = 0.10
+        self.SPD_Growth = 0.32
+        self.SKL_Growth = 0.40
+
+    def setStats(self):
+        
+
+a = Archer()
+print(a)
