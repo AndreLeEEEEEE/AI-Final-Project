@@ -1,15 +1,22 @@
-class Troubadour:
+from ..CharacterCreation.EnemyUnit import EnemyUnit
+
+class Troubadour(EnemyUnit):
     def __init__(self):
-        self.HP = 15
-        self.MAG = 1
-        self.DEF = 2
-        self.RES = 5
-        self.SPD = 3
-        self.SKL = 1
-        self.MOV = 7
-        self.HP_Growth = 0.50
-        self.MAG_Growth = 0.25
-        self.DEF_Growth = 0.12
-        self.RES_Growth = 0.40
-        self.SPD_Growth = 0.55
-        self.SKL_Growth = 0.35
+        EnemyUnit.__init__(self)
+        self._class = "Troubadour"
+
+    def setTraits(self):
+        self._stats["HP"] = 15
+        self._stats["MAG"] = 1
+        self._stats["DEF"] = 2
+        self._stats["RES"] = 5
+        self._stats["SPD"] = 3
+        self._stats["SKL"] = 1
+        self._stats["MOV"] = 7
+
+        self._growthRates["HP_Growth"] = 0.50
+        self._growthRates["MAG_Growth"] = 0.25
+        self._growthRates["DEF_Growth"] = 0.12
+        self._growthRates["RES_Growth"] = 0.40
+        self._growthRates["SPD_Growth"] = 0.55
+        self._growthRates["SKL_Growth"] = 0.35
