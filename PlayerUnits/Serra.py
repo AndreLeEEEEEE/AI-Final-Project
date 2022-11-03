@@ -1,7 +1,6 @@
-from ..CharacterCreation.PlayerUnit import PlayerUnit
-from ..Items.Weapons.Stave import Stave
-from ..Items.Miscellaneous.Vulnerary import Vulnerary
-
+from CharacterCreation.PlayerUnit import PlayerUnit
+from Items.Weapons.Stave import Stave
+from Items.Miscellaneous.Vulnerary import Vulnerary
 
 class Serra(PlayerUnit):
     def __init__(self):

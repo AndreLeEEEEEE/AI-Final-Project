@@ -1,6 +1,6 @@
-from ..CharacterCreation.PlayerUnit import PlayerUnit
-from ..Items.Weapons.Rapier import Rapier
-from ..Items.Miscellaneous.Vulnerary import Vulnerary
+from CharacterCreation.PlayerUnit import PlayerUnit
+from Items.Weapons.Rapier import Rapier
+from Items.Miscellaneous.Vulnerary import Vulnerary
 
 class Eliwood(PlayerUnit):
     def __init__(self):

@@ -1,6 +1,6 @@
-from ..CharacterCreation.PlayerUnit import PlayerUnit
-from ..Items.Weapons.Wolf_Beil import Wolf_Beil
-from ..Items.Miscellaneous.Vulnerary import Vulnerary
+from CharacterCreation.PlayerUnit import PlayerUnit
+from Items.Weapons.Wolf_Beil import Wolf_Beil
+from Items.Miscellaneous.Vulnerary import Vulnerary
 
 class Hector(PlayerUnit):
     def __init__(self):

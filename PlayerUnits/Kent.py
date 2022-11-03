@@ -1,7 +1,6 @@
-from ..CharacterCreation.PlayerUnit import PlayerUnit
-from ..Items.Weapons.Lance import Lance
-from ..Items.Weapons.Sword import Sword
-
+from CharacterCreation.PlayerUnit import PlayerUnit
+from Items.Weapons.Lance import Lance
+from Items.Weapons.Sword import Sword
 
 class Kent(PlayerUnit):
     def __init__(self):
