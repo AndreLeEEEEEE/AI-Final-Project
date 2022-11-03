@@ -18,7 +18,7 @@ class EnemyUnit:
     def __init__(self, level):
         self._level = level
 
-        randomInt = random.randrange(2)
+        randomInt = random.randrange(14)
         self._class = ""
         if randomInt == 0:
             self._class = Archer()
