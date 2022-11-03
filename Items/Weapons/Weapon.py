@@ -18,6 +18,3 @@ class Weapon:
         
     def getRNG(self):
         return self.RNG
-
-    def useWeapon(self, charMT):
-        return charMT + self.MT
