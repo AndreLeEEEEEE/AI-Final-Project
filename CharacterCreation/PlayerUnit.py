@@ -1,39 +1,54 @@
 import random
 
 class PlayerUnit:
-    def __init__(self, _class, _level, _baseStats, _growthRates):
-        self._class = _class
-        self._level = _level
-        self._HP = _baseStats.HP
-        self._STR = _baseStats.STR
-        self._MAG = _baseStats.MAG
-        self._DEF = _baseStats.DEF
-        self._RES = _baseStats.RES
-        self._SPD = _baseStats.SPD
-        self._SKL = _baseStats.SKL
-        self.HP_Growth = _growthRates.HP_Growth
-        self.STR_Growth = _growthRates.STR_Growth
-        self.MAG_Growth = _growthRates.MAG_Growth
-        self.DEF_Growth = _growthRates.DEF_Growth
-        self.RES_Growth = _growthRates.RES_Growth
-        self.SPD_Growth = _growthRates.SPD_Growth
-        self.SKL_Growth = _growthRates.SKL_Growth
+    def __init__(self):
+        self._class = ""
+        self._level = 10
+        self._stats = {
+            "HP": 0,
+            "STR": 0,
+            "MAG": 0,
+            "DEF": 0,
+            "RES": 0,
+            "SPD": 0,
+            "SKL": 0,
+            "MOV": 0
+        }
+        self._growthRates = {
+            "HP_Growth": 0.0,
+            "STR_Growth": 0.0,
+            "MAG_Growth": 0.0,
+            "DEF_Growth": 0.0,
+            "RES_Growth": 0.0,
+            "SPD_Growth": 0.0,
+            "SKL_Growth": 0.0,
+        }
 
     def levelUp(self):
         for add in range(self._level):
-            if random.random() < self.HP_Growth:
-                self._HP += 1
-            if random.random() < self.STR_Growth:
-                self._STR += 1
-            if random.random() < self.MAG_Growth:
-                self._MAG += 1
-            if random.random() < self.DEF_Growth:
-                self._DEF += 1
-            if random.random() < self.RES_Growth:
-                self._RES += 1
-            if random.random() < self.SPD_Growth:
-                self._SPD += 1
-            if random.random() < self.SKL_Growth:
-                self._SKL += 1 
+            if random.random() < self._growthRates["HP_Growth"]:
+                self._stats["HP"] += 1
+            if random.random() < self._growthRates["STR_Growth"]:
+                self._stats["STR"] += 1
+            if random.random() < self._growthRates["MAG_Growth"]:
+                self._stats["MAG"] += 1
+            if random.random() < self._growthRates["DEF_Growth"]:
+                self._stats["DEF"] += 1
+            if random.random() < self._growthRates["RES_Growth"]:
+                self._stats["RES"] += 1
+            if random.random() < self._growthRates["SPD_Growth"]:
+                self._stats["SPD"] += 1
+            if random.random() < self._growthRates["SKL_Growth"]:
+                self._stats["SKL"] += 1 
         
-    
+    def attack(self, offStat, wpnMT):
+        return self._stats[offStat] + wpnMT
+
+    def takeDMG(self, DMG):
+        self._stats["HP"] -= DMG
+        if self._stats["HP"] <= 0:
+            self.die(self)
+
+    def die(self):
+        # Update matchups and remove self from board
+        pass

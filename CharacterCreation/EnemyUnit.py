@@ -2,7 +2,7 @@ import random
 
 class EnemyUnit:
     def __init__(self):
-        self._level = 0
+        self._level = 10
         self._stats = {
             "HP": 0,
             "STR": 0,
@@ -25,19 +25,19 @@ class EnemyUnit:
 
     def levelUp(self):
         for add in range(self._level):
-            if random.random() < self.HP_Growth:
-                self._HP += 1
-            if random.random() < self.STR_Growth:
-                self._STR += 1
-            if random.random() < self.MAG_Growth:
-                self._MAG += 1
-            if random.random() < self.DEF_Growth:
-                self._DEF += 1
-            if random.random() < self.RES_Growth:
-                self._RES += 1
-            if random.random() < self.SPD_Growth:
-                self._SPD += 1
-            if random.random() < self.SKL_Growth:
-                self._SKL += 1 
+            if random.random() < self._growthRates["HP_Growth"]:
+                self._stats["HP"] += 1
+            if random.random() < self._growthRates["STR_Growth"]:
+                self._stats["STR"] += 1
+            if random.random() < self._growthRates["MAG_Growth"]:
+                self._stats["MAG"] += 1
+            if random.random() < self._growthRates["DEF_Growth"]:
+                self._stats["DEF"] += 1
+            if random.random() < self._growthRates["RES_Growth"]:
+                self._stats["RES"] += 1
+            if random.random() < self._growthRates["SPD_Growth"]:
+                self._stats["SPD"] += 1
+            if random.random() < self._growthRates["SKL_Growth"]:
+                self._stats["SKL"] += 1 
         
     
