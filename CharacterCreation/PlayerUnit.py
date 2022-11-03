@@ -1,3 +1,8 @@
+from PlayerUnits.Eliwood import Eliwood
+from PlayerUnits.Hector import Hector
+from PlayerUnits.Kent import Kent
+from PlayerUnits.Sain import Sain
+from PlayerUnits.Serra import Serra
 import random
 
 class PlayerUnit:
