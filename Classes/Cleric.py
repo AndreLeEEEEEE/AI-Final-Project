@@ -1,5 +1,8 @@
+from Items.Weapons.Stave import Stave
+
 class Cleric:
     def __init__(self):
+        self.name = "Cleric"
         self.HP = 16
         self.STR = 0
         self.MAG = 1
@@ -14,3 +17,4 @@ class Cleric:
         self.RES_Growth = 0.50
         self.SPD_Growth = 0.32
         self.SKL_Growth = 0.35
+        self.starting_items = [Stave]

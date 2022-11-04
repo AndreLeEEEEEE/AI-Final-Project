@@ -1,5 +1,8 @@
+from Items.Weapons.Sword import Sword
+
 class Mercenary:
     def __init__(self):
+        self.name = "Mercenary"
         self.HP = 18
         self.STR = 4
         self.MAG = 0
@@ -14,4 +17,5 @@ class Mercenary:
         self.RES_Growth = 0.20
         self.SPD_Growth = 0.32
         self.SKL_Growth = 0.40
+        self.starting_items = [Sword]
         

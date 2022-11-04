@@ -1,5 +1,8 @@
+from Items.Weapons.Lance import Lance
+
 class Soldier:
     def __init__(self):
+        self.name = "Soldier"
         self.HP = 20
         self.STR = 3
         self.MAG = 0
@@ -14,3 +17,4 @@ class Soldier:
         self.RES_Growth = 0.15
         self.SPD_Growth = 0.20
         self.SKL_Growth = 0.30
+        self.starting_items = [Lance]

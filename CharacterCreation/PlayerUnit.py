@@ -15,6 +15,7 @@ characters = {
 
 class PlayerUnit:
     def __init__(self, chr, level):
+        self._name = chr
         self._class = characters[chr]._class
         self._level = level
         self._stats = {

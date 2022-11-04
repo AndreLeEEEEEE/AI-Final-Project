@@ -1,5 +1,8 @@
+from Items.Weapons.Tome import Tome
+
 class Mage:
     def __init__(self):
+        self.name = "Mage"
         self.HP = 16
         self.STR = 0
         self.MAG = 1
@@ -14,4 +17,5 @@ class Mage:
         self.RES_Growth = 0.30
         self.SPD_Growth = 0.35
         self.SKL_Growth = 0.40
+        self.starting_items = [Tome]
         

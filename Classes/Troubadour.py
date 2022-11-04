@@ -1,5 +1,8 @@
+from Items.Weapons.Stave import Stave
+
 class Troubadour:
     def __init__(self):
+        self.name = "Troubadour"
         self.HP = 15
         self.STR = 0
         self.MAG = 1
@@ -14,3 +17,4 @@ class Troubadour:
         self.RES_Growth = 0.40
         self.SPD_Growth = 0.55
         self.SKL_Growth = 0.35
+        self.starting_items = [Stave]

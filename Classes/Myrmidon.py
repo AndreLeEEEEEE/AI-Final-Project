@@ -1,5 +1,8 @@
+from Items.Weapons.Sword import Sword
+
 class Myrmidon:
     def __init__(self):
+        self.name = "Myrmidon"
         self.HP = 16
         self.STR = 4
         self.MAG = 0
@@ -14,3 +17,4 @@ class Myrmidon:
         self.RES_Growth = 0.20
         self.SPD_Growth = 0.40
         self.SKL_Growth = 0.40
+        self.starting_items = [Sword]

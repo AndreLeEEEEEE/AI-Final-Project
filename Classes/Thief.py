@@ -1,5 +1,8 @@
+from Items.Weapons.Sword import Sword
+
 class Thief:
     def __init__(self):
+        self.name = "Thief"
         self.HP = 16
         self.STR = 3
         self.MAG = 0
@@ -14,3 +17,4 @@ class Thief:
         self.RES_Growth = 0.25
         self.SPD_Growth = 0.40
         self.SKL_Growth = 0.45
+        self.starting_items = [Sword]

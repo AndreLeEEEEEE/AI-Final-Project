@@ -49,6 +49,8 @@ class EnemyUnit:
         else:
             self._class = Troubadour()
 
+        self._name = self._class.name
+
         self._stats = {
             "HP": self._class.HP,
             "STR": self._class.STR,

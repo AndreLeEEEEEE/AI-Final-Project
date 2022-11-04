@@ -1,5 +1,8 @@
+from Items.Weapons.Tome import Tome
+
 class Monk:
     def __init__(self):
+        self.name = "Monk"
         self.HP = 18
         self.STR = 0
         self.MAG = 1
@@ -14,3 +17,4 @@ class Monk:
         self.RES_Growth = 0.40
         self.SPD_Growth = 0.32
         self.SKL_Growth = 0.35
+        self.starting_items = [Tome]

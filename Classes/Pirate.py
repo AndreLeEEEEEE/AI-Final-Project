@@ -1,5 +1,8 @@
+from Items.Weapons.Axe import Axe
+
 class Pirate:
     def __init__(self):
+        self.name = "Pirate"
         self.HP = 19
         self.STR = 4
         self.MAG = 0
@@ -14,3 +17,4 @@ class Pirate:
         self.RES_Growth = 0.13
         self.SPD_Growth = 0.25
         self.SKL_Growth = 0.35
+        self.starting_items = [Axe]
