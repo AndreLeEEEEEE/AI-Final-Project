@@ -13,6 +13,7 @@ class Brigand:
         self.MOV = 5
         self.HP_Growth = 0.82
         self.STR_Growth = 0.50
+        self.MAG_Growth = 0.0
         self.DEF_Growth = 0.10
         self.RES_Growth = 0.13
         self.SPD_Growth = 0.20

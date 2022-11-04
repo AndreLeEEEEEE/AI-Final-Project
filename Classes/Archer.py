@@ -13,6 +13,7 @@ class Archer:
         self.MOV = 5
         self.HP_Growth = 0.70
         self.STR_Growth = 0.35
+        self.MAG_Growth = 0.0
         self.DEF_Growth = 0.15
         self.RES_Growth = 0.10
         self.SPD_Growth = 0.32

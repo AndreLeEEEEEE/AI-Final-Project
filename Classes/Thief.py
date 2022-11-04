@@ -13,6 +13,7 @@ class Thief:
         self.MOV = 6
         self.HP_Growth = 0.50
         self.STR_Growth = 0.05
+        self.MAG_Growth = 0.0
         self.DEF_Growth = 0.05
         self.RES_Growth = 0.25
         self.SPD_Growth = 0.40

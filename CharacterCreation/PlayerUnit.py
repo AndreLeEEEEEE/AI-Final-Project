@@ -6,11 +6,11 @@ from PlayerUnits.Serra import Serra
 import random
 
 characters = {
-    "Eliwood": Eliwood,
-    "Hector": Hector,
-    "Kent": Kent,
-    "Sain": Sain,
-    "Serra": Serra
+    "Eliwood": Eliwood(),
+    "Hector": Hector(),
+    "Kent": Kent(),
+    "Sain": Sain(),
+    "Serra": Serra()
 }
 
 class PlayerUnit:
@@ -19,6 +19,7 @@ class PlayerUnit:
         self._class = characters[chr]._class
         self._level = level
         self._stats = {
+            "MaxHP": characters[chr].HP,
             "HP": characters[chr].HP,
             "STR": characters[chr].STR,
             "MAG": characters[chr].MAG,
@@ -41,6 +42,7 @@ class PlayerUnit:
     def levelUp(self):
         for add in range(self._level):
             if random.random() < self._growthRates["HP_Growth"]:
+                self._stats["MaxHP"] += 1
                 self._stats["HP"] += 1
             if random.random() < self._growthRates["STR_Growth"]:
                 self._stats["STR"] += 1

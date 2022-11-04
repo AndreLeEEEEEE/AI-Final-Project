@@ -13,6 +13,7 @@ class Knight:
         self.MOV = 4
         self.HP_Growth = 0.80
         self.STR_Growth = 0.40
+        self.MAG_Growth = 0.0
         self.DEF_Growth = 0.28
         self.RES_Growth = 0.20
         self.SPD_Growth = 0.15

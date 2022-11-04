@@ -12,6 +12,7 @@ class Monk:
         self.SKL = 1
         self.MOV = 5
         self.HP_Growth = 0.50
+        self.STR_Growth = 0.0
         self.MAG_Growth = 0.30
         self.DEF_Growth = 0.08
         self.RES_Growth = 0.40

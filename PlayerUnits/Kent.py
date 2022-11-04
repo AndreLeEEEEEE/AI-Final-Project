@@ -4,7 +4,7 @@ from Items.Weapons.Sword import Sword
 class Kent:
     def __init__(self):
         self._class = "Cavalier"
-        self.starting_items = [Lance(), Sword()]
+        self.starting_items = [Lance, Sword]
         self.HP = 20
         self.STR = 6
         self.MAG = 0

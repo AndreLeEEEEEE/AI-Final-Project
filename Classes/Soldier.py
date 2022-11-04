@@ -13,6 +13,7 @@ class Soldier:
         self.MOV = 5
         self.HP_Growth = 0.80
         self.STR_Growth = 0.50
+        self.MAG_Growth = 0.0
         self.DEF_Growth = 0.12
         self.RES_Growth = 0.15
         self.SPD_Growth = 0.20

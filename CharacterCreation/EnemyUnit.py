@@ -15,43 +15,70 @@ from Classes.Troubadour import Troubadour
 import random
 
 class EnemyUnit:
-    def __init__(self, level):
-        self._level = level
-
-        randomInt = random.randrange(14)
+    def __init__(self, level, boss=False):
         self._class = ""
-        if randomInt == 0:
-            self._class = Archer()
-        elif randomInt == 1:
-            self._class = Brigand()
-        elif randomInt == 1:
-            self._class = Cavalier()
-        elif randomInt == 1:
-            self._class = Cleric()
-        elif randomInt == 1:
-            self._class = Fighter()
-        elif randomInt == 1:
-            self._class = Knight()
-        elif randomInt == 1:
-            self._class = Mage()
-        elif randomInt == 1:
-            self._class = Mercenary()
-        elif randomInt == 1:
-            self._class = Monk()
-        elif randomInt == 1:
-            self._class = Myrmidon()
-        elif randomInt == 1:
-            self._class = Pirate()
-        elif randomInt == 1:
-            self._class = Soldier()
-        elif randomInt == 1:
-            self._class = Thief()
+        if boss:
+            self._level = level + 2
+            randomInt = random.randrange(12)
+            if randomInt == 0:
+                self._class = Archer()
+            elif randomInt == 1:
+                self._class = Brigand()
+            elif randomInt == 2:
+                self._class = Cavalier()
+            elif randomInt == 3:
+                self._class = Fighter()
+            elif randomInt == 4:
+                self._class = Knight()
+            elif randomInt == 5:
+                self._class = Mage()
+            elif randomInt == 6:
+                self._class = Mercenary()
+            elif randomInt == 7:
+                self._class = Monk()
+            elif randomInt == 8:
+                self._class = Myrmidon()
+            elif randomInt == 9:
+                self._class = Pirate()
+            elif randomInt == 10:
+                self._class = Soldier()
+            else:
+                self._class = Thief()
         else:
-            self._class = Troubadour()
+            self._level = level
+            randomInt = random.randrange(14)
+            if randomInt == 0:
+                self._class = Archer()
+            elif randomInt == 1:
+                self._class = Brigand()
+            elif randomInt == 2:
+                self._class = Cavalier()
+            elif randomInt == 3:
+                self._class = Cleric()
+            elif randomInt == 4:
+                self._class = Fighter()
+            elif randomInt == 5:
+                self._class = Knight()
+            elif randomInt == 6:
+                self._class = Mage()
+            elif randomInt == 7:
+                self._class = Mercenary()
+            elif randomInt == 8:
+                self._class = Monk()
+            elif randomInt == 9:
+                self._class = Myrmidon()
+            elif randomInt == 10:
+                self._class = Pirate()
+            elif randomInt == 11:
+                self._class = Soldier()
+            elif randomInt == 12:
+                self._class = Thief()
+            else:
+                self._class = Troubadour()
 
         self._name = self._class.name
-
         self._stats = {
+            "MaxHP": self._class.HP,
             "HP": self._class.HP,
             "STR": self._class.STR,
             "MAG": self._class.MAG,
@@ -61,19 +88,22 @@ class EnemyUnit:
             "SKL": self._class.SKL,
             "MOV": self._class.MOV
         }
+        if boss:
+            self._stats["MOV"] = 0
         self._growthRates = {
-            "HP_Growth": self._class.HP,
-            "STR_Growth": self._class.STR,
-            "MAG_Growth": self._class.MAG,
-            "DEF_Growth": self._class.DEF,
-            "RES_Growth": self._class.RES,
-            "SPD_Growth": self._class.SPD,
-            "SKL_Growth": self._class.SKL,
+            "HP_Growth": self._class.HP_Growth,
+            "STR_Growth": self._class.STR_Growth,
+            "MAG_Growth": self._class.MAG_Growth,
+            "DEF_Growth": self._class.DEF_Growth,
+            "RES_Growth": self._class.RES_Growth,
+            "SPD_Growth": self._class.SPD_Growth,
+            "SKL_Growth": self._class.SKL_Growth,
         }
 
     def levelUp(self):
         for add in range(self._level):
             if random.random() < self._growthRates["HP_Growth"]:
+                self._stats["MaxHP"] += 1
                 self._stats["HP"] += 1
             if random.random() < self._growthRates["STR_Growth"]:
                 self._stats["STR"] += 1

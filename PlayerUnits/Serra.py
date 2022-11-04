@@ -4,7 +4,7 @@ from Items.Miscellaneous.Vulnerary import Vulnerary
 class Serra:
     def __init__(self):
         self._class = "Cleric"
-        self.starting_items = [Stave(), Vulnerary()]
+        self.starting_items = [Stave, Vulnerary]
         self.HP = 17
         self.STR = 0
         self.MAG = 2

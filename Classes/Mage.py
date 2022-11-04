@@ -12,6 +12,7 @@ class Mage:
         self.SKL = 2
         self.MOV = 5
         self.HP_Growth = 0.55
+        self.STR_Growth = 0.0
         self.MAG_Growth = 0.55
         self.DEF_Growth = 0.05
         self.RES_Growth = 0.30
