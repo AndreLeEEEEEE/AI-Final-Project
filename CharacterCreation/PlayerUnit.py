@@ -5,28 +5,36 @@ from PlayerUnits.Sain import Sain
 from PlayerUnits.Serra import Serra
 import random
 
+characters = {
+    "Eliwood": Eliwood,
+    "Hector": Hector,
+    "Kent": Kent,
+    "Sain": Sain,
+    "Serra": Serra
+}
+
 class PlayerUnit:
-    def __init__(self):
-        self._class = ""
-        self._level = 10
+    def __init__(self, chr, level):
+        self._class = characters[chr]._class
+        self._level = level
         self._stats = {
-            "HP": 0,
-            "STR": 0,
-            "MAG": 0,
-            "DEF": 0,
-            "RES": 0,
-            "SPD": 0,
-            "SKL": 0,
-            "MOV": 0
+            "HP": characters[chr].HP,
+            "STR": characters[chr].STR,
+            "MAG": characters[chr].MAG,
+            "DEF": characters[chr].DEF,
+            "RES": characters[chr].RES,
+            "SPD": characters[chr].SPD,
+            "SKL": characters[chr].SKL,
+            "MOV": characters[chr].MOV
         }
         self._growthRates = {
-            "HP_Growth": 0.0,
-            "STR_Growth": 0.0,
-            "MAG_Growth": 0.0,
-            "DEF_Growth": 0.0,
-            "RES_Growth": 0.0,
-            "SPD_Growth": 0.0,
-            "SKL_Growth": 0.0,
+            "HP_Growth": characters[chr].HP_Growth,
+            "STR_Growth": characters[chr].STR_Growth,
+            "MAG_Growth": characters[chr].MAG_Growth,
+            "DEF_Growth": characters[chr].DEF_Growth,
+            "RES_Growth": characters[chr].RES_Growth,
+            "SPD_Growth": characters[chr].SPD_Growth,
+            "SKL_Growth": characters[chr].SKL_Growth,
         }
 
     def levelUp(self):
@@ -57,3 +65,8 @@ class PlayerUnit:
     def die(self):
         # Update matchups and remove self from board
         pass
+
+    def move(self):
+        # Move up to the unit's movement
+        pass
+    

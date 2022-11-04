@@ -1,6 +1,7 @@
 class Cleric:
     def __init__(self):
         self.HP = 16
+        self.STR = 0
         self.MAG = 1
         self.DEF = 0
         self.RES = 6

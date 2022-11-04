@@ -1,6 +1,7 @@
 class Troubadour:
     def __init__(self):
         self.HP = 15
+        self.STR = 0
         self.MAG = 1
         self.DEF = 2
         self.RES = 5

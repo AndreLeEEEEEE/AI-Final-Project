@@ -2,6 +2,7 @@ class Knight:
     def __init__(self):
         self.HP = 17
         self.STR = 5
+        self.MAG = 0
         self.DEF = 9
         self.RES = 0
         self.SPD = 0

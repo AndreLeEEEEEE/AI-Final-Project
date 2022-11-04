@@ -1,9 +1,8 @@
-from Weapon import Weapon
-
-class Tome(Weapon):
-    def __init__(self):
-        Weapon.__init__(self)
-        self.name = "Tome"
-        self.MT = 5
-        self.HIT = 0.90
-        self.RNG = (1, 2)
+Tome = {
+    "name": "Tome",
+    "MT": 5,
+    "HIT": 0.90,
+    "RNG": (1, 2),
+    "offense": True,
+    "type": "MAG"
+}

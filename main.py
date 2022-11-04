@@ -1,4 +1,5 @@
 from CharacterCreation.EnemyUnit import EnemyUnit
+from CharacterCreation.PlayerUnit import PlayerUnit
 
 def main():
     yan = EnemyUnit(10)

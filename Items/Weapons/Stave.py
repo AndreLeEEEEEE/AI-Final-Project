@@ -1,10 +1,8 @@
-from Weapon import Weapon
-
-class Stave(Weapon):
-    def __init__(self):
-        Weapon.__init__(self)
-        self.name = "Stave"
-        self.MT = 10
-        self.HIT = 1.0
-        self.RNG = 1
-        self.offence = False
+Stave = {
+    "name": "Stave",
+    "MT": 10,
+    "HIT": 1.0,
+    "RNG": 1,
+    "offense": False,
+    "type": "MAG"
+}

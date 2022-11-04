@@ -1,6 +1,7 @@
 class Mage:
     def __init__(self):
         self.HP = 16
+        self.STR = 0
         self.MAG = 1
         self.DEF = 3
         self.RES = 3

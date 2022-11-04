@@ -2,6 +2,7 @@ class Brigand:
     def __init__(self):
         self.HP = 20
         self.STR = 5
+        self.MAG = 0
         self.DEF = 3
         self.RES = 0
         self.SPD = 5

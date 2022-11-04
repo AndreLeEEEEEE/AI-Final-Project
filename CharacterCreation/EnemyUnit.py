@@ -50,40 +50,24 @@ class EnemyUnit:
             self._class = Troubadour()
 
         self._stats = {
-            "HP": 0,
-            "STR": 0,
-            "MAG": 0,
-            "DEF": 0,
-            "RES": 0,
-            "SPD": 0,
-            "SKL": 0,
-            "MOV": 0
+            "HP": self._class.HP,
+            "STR": self._class.STR,
+            "MAG": self._class.MAG,
+            "DEF": self._class.DEF,
+            "RES": self._class.RES,
+            "SPD": self._class.SPD,
+            "SKL": self._class.SKL,
+            "MOV": self._class.MOV
         }
         self._growthRates = {
-            "HP_Growth": 0.0,
-            "STR_Growth": 0.0,
-            "MAG_Growth": 0.0,
-            "DEF_Growth": 0.0,
-            "RES_Growth": 0.0,
-            "SPD_Growth": 0.0,
-            "SKL_Growth": 0.0,
+            "HP_Growth": self._class.HP,
+            "STR_Growth": self._class.STR,
+            "MAG_Growth": self._class.MAG,
+            "DEF_Growth": self._class.DEF,
+            "RES_Growth": self._class.RES,
+            "SPD_Growth": self._class.SPD,
+            "SKL_Growth": self._class.SKL,
         }
-
-    def setTraits(self):
-        self._stats["HP"] = self._class.HP
-        self._stats["STR"] = self._class.STR
-        self._stats["DEF"] = self._class.DEF
-        self._stats["RES"] = self._class.RES
-        self._stats["SPD"] = self._class.SPD
-        self._stats["SKL"] = self._class.SKL
-        self._stats["MOV"] = self._class.MOV
-
-        self._growthRates["HP_Growth"] = self._class.HP_Growth
-        self._growthRates["STR_Growth"] = self._class.STR_Growth
-        self._growthRates["DEF_Growth"] = self._class.DEF_Growth
-        self._growthRates["RES_Growth"] = self._class.RES_Growth
-        self._growthRates["SPD_Growth"] = self._class.SPD_Growth
-        self._growthRates["SKL_Growth"] = self._class.SKL_Growth
 
     def levelUp(self):
         for add in range(self._level):
@@ -100,4 +84,21 @@ class EnemyUnit:
             if random.random() < self._growthRates["SPD_Growth"]:
                 self._stats["SPD"] += 1
             if random.random() < self._growthRates["SKL_Growth"]:
-                self._stats["SKL"] += 1 
+                self._stats["SKL"] += 1
+    
+    def attack(self, offStat, wpnMT):
+        return self._stats[offStat] + wpnMT
+
+    def takeDMG(self, DMG):
+        self._stats["HP"] -= DMG
+        if self._stats["HP"] <= 0:
+            self.die(self)
+
+    def die(self):
+        # Update matchups and remove self from board
+        pass
+
+    def move(self):
+        # Move up to the unit's movement
+        pass
+    

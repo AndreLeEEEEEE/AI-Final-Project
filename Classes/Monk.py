@@ -1,6 +1,7 @@
 class Monk:
     def __init__(self):
         self.HP = 18
+        self.STR = 0
         self.MAG = 1
         self.DEF = 1
         self.RES = 5

@@ -2,6 +2,7 @@ class Myrmidon:
     def __init__(self):
         self.HP = 16
         self.STR = 4
+        self.MAG = 0
         self.DEF = 2
         self.RES = 0
         self.SPD = 9

@@ -1,25 +1,22 @@
-from CharacterCreation.PlayerUnit import PlayerUnit
 from Items.Weapons.Stave import Stave
 from Items.Miscellaneous.Vulnerary import Vulnerary
 
-class Serra(PlayerUnit):
+class Serra:
     def __init__(self):
-        PlayerUnit.__init__(self)
         self._class = "Cleric"
         self.starting_items = [Stave(), Vulnerary()]
-
-    def setTraits(self):
-        self._stats["HP"] = 17
-        self._stats["STR"] = 2
-        self._stats["DEF"] = 2
-        self._stats["RES"] = 5
-        self._stats["SPD"] = 8
-        self._stats["SKL"] = 5
-        self._stats["MOV"] = 5
-
-        self._growthRates["HP_Growth"] = 0.50
-        self._growthRates["STR_Growth"] = 0.50
-        self._growthRates["DEF_Growth"] = 0.15
-        self._growthRates["RES_Growth"] = 0.55
-        self._growthRates["SPD_Growth"] = 0.40
-        self._growthRates["SKL_Growth"] = 0.30
+        self.HP = 17
+        self.STR = 0
+        self.MAG = 2
+        self.DEF = 2
+        self.RES = 5
+        self.SPD = 8
+        self.SKL = 5
+        self.MOV = 5
+        self.HP_Growth = 0.50
+        self.STR_Growth = 0.0
+        self.MAG_Growth = 0.50
+        self.DEF_Growth = 0.15
+        self.RES_Growth = 0.55
+        self.SPD_Growth = 0.40
+        self.SKL_Growth = 0.30

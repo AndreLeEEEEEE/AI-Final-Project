@@ -2,6 +2,7 @@ class Pirate:
     def __init__(self):
         self.HP = 19
         self.STR = 4
+        self.MAG = 0
         self.DEF = 3
         self.RES = 0
         self.SPD = 6

@@ -2,6 +2,7 @@ class Cavalier:
     def __init__(self):
         self.HP = 20
         self.STR = 5
+        self.MAG = 0
         self.DEF = 6
         self.RES = 0
         self.SPD = 5

@@ -2,6 +2,7 @@ class Mercenary:
     def __init__(self):
         self.HP = 18
         self.STR = 4
+        self.MAG = 0
         self.DEF = 4
         self.RES = 0
         self.SPD = 8

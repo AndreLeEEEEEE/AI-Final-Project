@@ -2,6 +2,7 @@ class Fighter:
     def __init__(self):
         self.HP = 20
         self.STR = 5
+        self.MAG = 0
         self.DEF = 2
         self.RES = 0
         self.SPD = 4
