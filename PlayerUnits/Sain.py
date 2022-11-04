@@ -1,10 +1,9 @@
 from Items.Weapons.Lance import Lance
-from Items.Weapons.Sword import Sword
 
 class Sain:
     def __init__(self):
         self._class = "Cavalier"
-        self.starting_items = [Lance, Sword]
+        self.starting_items = [Lance]
         self.HP = 19
         self.STR = 8
         self.MAG = 0

@@ -17,6 +17,7 @@ import random
 class EnemyUnit:
     def __init__(self, level, boss=False):
         self._class = ""
+        self._boss = boss
         if boss:
             self._level = level + 2
             randomInt = random.randrange(12)
@@ -99,6 +100,8 @@ class EnemyUnit:
             "SPD_Growth": self._class.SPD_Growth,
             "SKL_Growth": self._class.SKL_Growth,
         }
+        self._side = 2
+        self._aggro = False
 
     def levelUp(self):
         for add in range(self._level):
@@ -125,6 +128,8 @@ class EnemyUnit:
         self._stats["HP"] -= DMG
         if self._stats["HP"] <= 0:
             self.die(self)
+        else:
+            self._aggro = True
 
     def die(self):
         # Update matchups and remove self from board

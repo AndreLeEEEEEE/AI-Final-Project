@@ -38,6 +38,7 @@ class PlayerUnit:
             "SPD_Growth": characters[chr].SPD_Growth,
             "SKL_Growth": characters[chr].SKL_Growth,
         }
+        self._side = 1
 
     def levelUp(self):
         for add in range(self._level):
@@ -66,6 +67,9 @@ class PlayerUnit:
             self.die(self)
 
     def die(self):
+        if self._class == "Lord":
+            # Trigger game over
+            pass
         # Update matchups and remove self from board
         pass
 
