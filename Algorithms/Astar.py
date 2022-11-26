@@ -8,9 +8,9 @@ def find_lowest_f(open):
     """
     lowF = math.inf
     lowInd = None
-    for index, node in enumerate(open):
-        if node.get_f() < lowF:
-            lowF = node.get_f()
+    for index, tile in enumerate(open):
+        if tile.get_f() < lowF:
+            lowF = tile.get_f()
             lowInd = index
 
     return lowInd
@@ -91,7 +91,9 @@ def Astar(field, open, target, mov):
     # Tiles are tuples of x,y coordinates
     closed = []
     while open:
+        print(open)
         q = open.pop(find_lowest_f(open))
+        print("From this tile: ", q.get_coord())
         closed.append(q)
 
         if q.get_coord() == target:
@@ -99,16 +101,13 @@ def Astar(field, open, target, mov):
 
         for genTile in q.find_children(field):
             succTile = genTile.get_coord()
+            print(succTile)
             if succTile == target:
-                return succTile.success()
+                return genTile.success()
             else:
-                h = 0
                 manDist = manhattan_dist(succTile, target)
-                # Heuristic value one - number of tiles out of place, or
-                h += 1
-                # Heuristic value two - sum of the distances of the tiles from their goal positions
-                #h += manDist
-                genTile.set_h(h)
+
+                genTile.set_h(manDist)
                 genTile.set_f(genTile.get_g() + genTile.get_h())
 
             if (succTile not in return_tiles(open)
@@ -116,7 +115,7 @@ def Astar(field, open, target, mov):
                 open.append(genTile)
             elif succTile in return_tiles(open):
                 for tile in open:
-                    if (succTile == tile.get_state()
+                    if (succTile == tile.get_coord()
                         and genTile.get_f() < tile.get_f()):
                         open.pop(open.index(tile))
                         open.append(genTile)
@@ -126,8 +125,9 @@ field = [['_', '_', '_', '_', '_'],
         ['_', '_', '_', '_', '_'],
         ['_', '_', 'U', '_', '_'],
         ['_', '_', '_', '_', '_'],
-        ['_', 'T', '_', '_', '_']]
+        ['_', '_', '_', '_', '_']]
 
 s = Tile((2, 2))
 
-Astar(field, [s], (4, 1), 4)
+results = Astar(field, [s], (4, 1), 4)
+print(results)
