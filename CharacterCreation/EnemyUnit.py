@@ -146,8 +146,6 @@ class EnemyUnit:
         pass
 
     def target(self):
-        visited = []
-        queue = []
         pass
 
     def move(self):
