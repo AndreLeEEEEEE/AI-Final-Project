@@ -19,8 +19,6 @@ def BFS(field, unit, mov):
         queue += toBeQueued
         mov -= 1
 
-    print(visited)
-
 field = [['_', '_', '_', '_', '_'],
         ['_', '_', '_', '_', '_'],
         ['_', '_', 'U', '_', '_'],
