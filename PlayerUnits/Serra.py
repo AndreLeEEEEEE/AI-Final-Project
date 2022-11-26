@@ -20,3 +20,4 @@ class Serra:
         self.RES_Growth = 0.55
         self.SPD_Growth = 0.40
         self.SKL_Growth = 0.30
+        self.type = "Support"

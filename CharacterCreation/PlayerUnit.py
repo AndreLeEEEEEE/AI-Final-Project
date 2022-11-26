@@ -39,6 +39,11 @@ class PlayerUnit:
             "SKL_Growth": characters[chr].SKL_Growth,
         }
         self._side = 1
+        self._type = characters[chr].type
+        if characters[chr].type == "Offensive":
+            self._state = "aggro"
+        else:
+            self._state = "heal"
 
     def levelUp(self):
         for add in range(self._level):
@@ -66,11 +71,17 @@ class PlayerUnit:
         if self._stats["HP"] <= 0:
             self.die(self)
 
+    def switchState(self):
+        self._retreat = False if self._retreat else True
+
     def die(self):
         if self._class == "Lord":
             # Trigger game over
             pass
         # Update matchups and remove self from board
+        pass
+
+    def target(self):
         pass
 
     def move(self):

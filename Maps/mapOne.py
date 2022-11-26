@@ -130,3 +130,5 @@ mapOne[16][14] = 3
 mapOne[16][15] = 3
 mapOne[16][16] = 3
 mapOne[16][17] = 3
+
+print(mapOne)

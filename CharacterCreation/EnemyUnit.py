@@ -18,6 +18,7 @@ class EnemyUnit:
     def __init__(self, level, boss=False):
         self._class = ""
         self._boss = boss
+        # Set unit level and random class
         if boss:
             self._level = level + 2
             randomInt = random.randrange(12)
@@ -76,7 +77,7 @@ class EnemyUnit:
                 self._class = Thief()
             else:
                 self._class = Troubadour()
-
+        # String name of class
         self._name = self._class.name
         self._stats = {
             "MaxHP": self._class.HP,
@@ -89,6 +90,7 @@ class EnemyUnit:
             "SKL": self._class.SKL,
             "MOV": self._class.MOV
         }
+        # Set growth rates and movement
         if boss:
             self._stats["MOV"] = 0
         self._growthRates = {
@@ -101,7 +103,12 @@ class EnemyUnit:
             "SKL_Growth": self._class.SKL_Growth,
         }
         self._side = 2
-        self._aggro = False
+        # Set unit type
+        if self._name == "Cleric" or self._name == "Troubadour":
+            self._type = "Support"
+        else:
+            self._type = "Offensive"
+        self._state = "passive"
 
     def levelUp(self):
         for add in range(self._level):
@@ -131,8 +138,16 @@ class EnemyUnit:
         else:
             self._aggro = True
 
+    def switchState(self):
+        self._retreat = False if self._retreat else True
+
     def die(self):
         # Update matchups and remove self from board
+        pass
+
+    def target(self):
+        visited = []
+        queue = []
         pass
 
     def move(self):

@@ -19,3 +19,4 @@ class Sain:
         self.RES_Growth = 0.20
         self.SPD_Growth = 0.40
         self.SKL_Growth = 0.35
+        self.type = "Offensive"

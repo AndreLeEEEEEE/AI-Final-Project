@@ -1,1 +1,4 @@
-addrBook
+addrBook = {
+    "Players": [],
+    "Enemies": []
+}

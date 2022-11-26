@@ -20,3 +20,4 @@ class Eliwood:
         self.RES_Growth = 0.35
         self.SPD_Growth = 0.40
         self.SKL_Growth = 0.50
+        self.type = "Offensive"

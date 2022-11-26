@@ -19,3 +19,4 @@ class Kent:
         self.RES_Growth = 0.25
         self.SPD_Growth = 0.45
         self.SKL_Growth = 0.50
+        self.type = "Offensive"

@@ -20,3 +20,5 @@ class Hector:
         self.RES_Growth = 0.25
         self.SPD_Growth = 0.35
         self.SKL_Growth = 0.45
+        self.type = "Offensive"
+        
