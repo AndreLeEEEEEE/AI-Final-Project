@@ -52,7 +52,7 @@ def scan(field, unit, tile, target, RNG):
     return False
 
 def BFS(field, unit, target, RNG):
-    """Scan the map for the closest target"""
+    """Scan the map for the closest target."""
     """
     field - list of list of int/char, the map
     unit - tuple of int, the unit's current position
@@ -65,14 +65,12 @@ def BFS(field, unit, target, RNG):
     while queue:
         toBeQueued = []
         for tile in queue:
-            print("From this tile", tile)
             if scan(field, unit, tile, target, RNG):
                     return tile
             appRules = applicable_rules(field, tile)
             for rule in appRules:
                 newTile = rule(tile)
                 if newTile not in visited and newTile not in toBeQueued:
-                    print(newTile)
                     toBeQueued.append(newTile)
         visited += queue
         queue.clear()

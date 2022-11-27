@@ -2,9 +2,9 @@ from Directions import *
 import math
 
 def find_lowest_f(open):
-    """Find the index of the node with the lowest f."""
+    """Find the index of the tile with the lowest f."""
     """
-    open - list of nodes, the open queue
+    open - list of Tile, the open queue
     """
     lowF = math.inf
     lowInd = None
@@ -26,7 +26,7 @@ class Tile:
         self.rule = rule
         # F value
         self.F = F
-        # Heuristic value
+        # Heuristic value (optimistic)
         self.H = H
 
     def get_coord(self):
@@ -75,24 +75,30 @@ class Tile:
 
 def manhattan_dist(tile, target):
     """Get the Manhattan distance between a tile and the target."""
+    """(Ignores walls and unit positions)"""
     """
     tile - tuple of int, value of the tile
-    goal - tuple of int, the target tile
+    target - tuple of int, the target tile
     """
     row, col = tile
     tRow, tCol = target
     return abs(tRow-row) + abs(tCol-col)
 
 def return_tiles(queue):
+    """Get the list of coordinates of all tiles in the queue."""
     return [tile.get_coord() for tile in queue]
 
-def Astar(field, open, target, mov):
-    # Move towards the target
-    # Tiles belong to a tile class
+def Astar(field, open, target):
+    """Find path to target."""
+    """
+    field - list of list of int/char, the map
+    open - list of Tile, tiles to investigate/expand
+    target - tuple of int, the tile the unit is trying to reach
+    """
     closed = []
     while open:
         q = open.pop(find_lowest_f(open))
-        print("From this tile: ", q.get_coord())
+        # print("From this tile: ", q.get_coord())
         closed.append(q)
 
         if q.get_coord() == target:
@@ -100,12 +106,11 @@ def Astar(field, open, target, mov):
 
         for genTile in q.find_children(field):
             succTile = genTile.get_coord()
-            print(succTile)
+            # print(succTile)
             if succTile == target:
                 return genTile.success()
             else:
                 manDist = manhattan_dist(succTile, target)
-
                 genTile.set_h(manDist)
                 genTile.set_f(genTile.get_g() + genTile.get_h())
 
@@ -126,7 +131,18 @@ field = [['_', '_', '_', '_', '_'],
         ['_', '_', '_', '_', '_'],
         ['_', '_', '_', 'W', '_']]
 
-s = Tile((1, 3))
 
-results = Astar(field, [s], (4, 2), 4)
-print(results)
+def moveTowardsTarget(field, unit, target, mov):
+    path = Astar(field, [Tile(unit)], target)
+    # print(path)
+    newPosition = list(unit)
+    for m in range(mov):
+        # print(path[m])
+        newPosition = list(path[m](newPosition))
+        # Prevent invalid indexing when the unit needs less
+        # movement than they have to reach the target
+        if tuple(newPosition) == target:
+            break
+    return tuple(newPosition)
+
+print(moveTowardsTarget(field, (1, 3), (4, 2), 4))
