@@ -88,10 +88,9 @@ def return_tiles(queue):
 
 def Astar(field, open, target, mov):
     # Move towards the target
-    # Tiles are tuples of x,y coordinates
+    # Tiles belong to a tile class
     closed = []
     while open:
-        print(open)
         q = open.pop(find_lowest_f(open))
         print("From this tile: ", q.get_coord())
         closed.append(q)
@@ -122,12 +121,12 @@ def Astar(field, open, target, mov):
                         break
 
 field = [['_', '_', '_', '_', '_'],
+        ['_', '_', '_', 'U', '_'],
+        ['_', 'W', 'W', 'W', '_'],
         ['_', '_', '_', '_', '_'],
-        ['_', '_', 'U', '_', '_'],
-        ['_', '_', '_', '_', '_'],
-        ['_', '_', '_', '_', '_']]
+        ['_', '_', '_', 'W', '_']]
 
-s = Tile((2, 2))
+s = Tile((1, 3))
 
-results = Astar(field, [s], (4, 1), 4)
+results = Astar(field, [s], (4, 2), 4)
 print(results)
