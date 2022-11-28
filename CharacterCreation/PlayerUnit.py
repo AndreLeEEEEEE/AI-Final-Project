@@ -3,6 +3,8 @@ from PlayerUnits.Hector import Hector
 from PlayerUnits.Kent import Kent
 from PlayerUnits.Sain import Sain
 from PlayerUnits.Serra import Serra
+from Maps.mapOne import mapOne
+from Algorithms.BFS import BFS
 import random
 
 characters = {
@@ -14,7 +16,7 @@ characters = {
 }
 
 class PlayerUnit:
-    def __init__(self, chr, level):
+    def __init__(self, chr, level, id):
         self._name = chr
         self._class = characters[chr]._class
         self._level = level
@@ -39,11 +41,19 @@ class PlayerUnit:
             "SKL_Growth": characters[chr].SKL_Growth,
         }
         self._side = 1
+        self._id = id
         self._type = characters[chr].type
         if characters[chr].type == "Offensive":
             self._state = "aggro"
         else:
             self._state = "heal"
+        self._inventory = characters[chr].starting_items
+
+    def get_id(self):
+        return self._id
+
+    def get_side(self):
+        return self._side
 
     def levelUp(self):
         for add in range(self._level):
@@ -71,17 +81,16 @@ class PlayerUnit:
         if self._stats["HP"] <= 0:
             self.die(self)
 
-    def switchState(self):
-        self._retreat = False if self._retreat else True
-
+    def scanForTarget(self):
+        target = 2 if self._type == "Offensive" else 1
+        RNG = self._inventory[0]["RNG"]
+        BFS(mapOne, target, RNG)
+        
     def die(self):
         if self._class == "Lord":
             # Trigger game over
             pass
         # Update matchups and remove self from board
-        pass
-
-    def target(self):
         pass
 
     def move(self):

@@ -12,10 +12,12 @@ from Classes.Pirate import Pirate
 from Classes.Soldier import Soldier
 from Classes.Thief import Thief
 from Classes.Troubadour import Troubadour
+from Maps.mapOne import mapOne
+from Algorithms.BFS import *
 import random
 
 class EnemyUnit:
-    def __init__(self, level, boss=False):
+    def __init__(self, level, id, boss=False):
         self._class = ""
         self._boss = boss
         # Set unit level and random class
@@ -103,12 +105,19 @@ class EnemyUnit:
             "SKL_Growth": self._class.SKL_Growth,
         }
         self._side = 2
+        self._id = id
         # Set unit type
         if self._name == "Cleric" or self._name == "Troubadour":
             self._type = "Support"
         else:
             self._type = "Offensive"
         self._state = "passive"
+
+    def get_id(self):
+        return self._id
+
+    def get_side(self):
+        return self._side
 
     def levelUp(self):
         for add in range(self._level):
@@ -139,7 +148,7 @@ class EnemyUnit:
             self._aggro = True
 
     def switchState(self):
-        self._retreat = False if self._retreat else True
+        pass
 
     def die(self):
         # Update matchups and remove self from board

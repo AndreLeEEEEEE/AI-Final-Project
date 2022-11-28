@@ -7,4 +7,4 @@ testMapTwo[0][0] = 2
 # Set player spawn points
 testMapTwo[0][1] = 1
 
-print(testMapTwo)
+#print(testMapTwo)

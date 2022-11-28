@@ -1,6 +1,6 @@
-from Directions import *
+from Algorithms.Directions import *
 
-def scan(field, unit, tile, target, RNG):
+def scan(field, unit, tile, target, RNG, side):
     """From the current tile, scan for targets in range."""
     """
     field - list of list of int/char, the map
@@ -9,55 +9,68 @@ def scan(field, unit, tile, target, RNG):
     target - int, an enemy to attack or an injured ally to heal
     RNG - tuple of int, the range at which a unit can attack
     """
+    def checkTile(row, col):
+        # If the calling unit is a player unit
+        if side == 1:
+            try:
+                position = field[row][col]
+                # Look for injured ally
+                if ((row, col) != unit 
+                    and target == 1 
+                    and position.get_side() == 1):
+                    if (position._stats["HP"] < position._stats["MaxHP"]):
+                        return True
+                # Look for enemy
+                elif ((row, col) != unit and target == 2 and position.get_side() == 2):
+                    return True
+                else:
+                    return False
+            except:
+                return False
+        # If the calling unit is an enemy unit
+        else:
+            try:
+                position = field[row][col]
+                # Look for injured ally
+                if ((row, col) != unit 
+                    and target == 2 
+                    and position.get_side() == 2):
+                    if (position._stats["HP"] < position._stats["MaxHP"]):
+                        return True
+                # Look for enemy
+                elif ((row, col) != unit and target == 1 and position.get_side() == 1):
+                    return True
+                else:
+                    return False
+            except:
+                return False
+
     r, c = tile
     for num in RNG:
         if num == 1:
-            try: 
-                if (r+1,c) != unit and field[r+1][c] == target: return True
-            except: pass
-            try:
-                if (r-1,c) != unit and field[r-1][c] == target: return True
-            except: pass
-            try:
-                if (r,c+1) != unit and field[r][c+1] == target: return True
-            except: pass
-            try:
-                if (r,c-1) != unit and field[r][c-1] == target: return True
-            except: pass
+            if checkTile(r+1, c): return True
+            if checkTile(r-1, c): return True
+            if checkTile(r, c+1): return True
+            if checkTile(r, c-1): return True
         else:
-            try:
-                if (r+2,c) != unit and field[r+2][c] == target: return True
-            except: pass
-            try:
-                if (r-2,c) != unit and field[r-2][c] == target: return True
-            except: pass
-            try:
-                if (r,c+2) != unit and field[r][c+2] == target: return True
-            except: pass
-            try:
-                if (r,c-2) != unit and field[r][c-2] == target: return True
-            except: pass
-            try:
-                if (r+1,c+1) != unit and field[r+1][c+1] == target: return True
-            except: pass
-            try:
-                if (r-1,c+1) != unit and field[r-1][c+1] == target: return True
-            except: pass
-            try:
-                if (r+1,c-1) != unit and field[r+1][c-1] == target: return True
-            except: pass
-            try:
-                if (r-1,c-1) != unit and field[r-1][c-1] == target: return True
-            except: pass
+            if checkTile(r+2, c): return True
+            if checkTile(r-2, c): return True
+            if checkTile(r, c+2): return True
+            if checkTile(r, c-2): return True
+            if checkTile(r+1, c+1): return True
+            if checkTile(r+1, c-1): return True
+            if checkTile(r-1, c+1): return True
+            if checkTile(r-1, c-1): return True
     return False
 
-def BFS(field, unit, target, RNG):
+def BFS(field: list[list], unit: tuple, target: int, RNG: list, side: int):
     """Scan the map for the closest target."""
     """
     field - list of list of int/char, the map
     unit - tuple of int, the unit's current position
     target - int, an enemy to attack or an injured ally to heal
     RNG - tuple of int, the range at which the unit can act
+    side - int, the side the calling unit is on
     """
     visited = []
     queue = [unit]
@@ -65,7 +78,7 @@ def BFS(field, unit, target, RNG):
     while queue:
         toBeQueued = []
         for tile in queue:
-            if scan(field, unit, tile, target, RNG):
+            if scan(field, unit, tile, target, RNG, side):
                     return tile
             appRules = applicable_rules(field, tile)
             for rule in appRules:
@@ -89,9 +102,3 @@ field = [['_', '_', '_', '_', '_'],
 #         ['V', 'V', 'U', 'V', 'V'],
 #         ['_', 'V', 'V', 'V', '_'],
 #         ['_', '_', 'V', '_', '_']]
-
-# Find the closest enemy
-#print("Final result:", BFS(field, (2, 2), 2, [1, 2]))
-
-# Find the closest ally, make sure to not "find" itself
-print("Final result:", BFS(field, (2, 2), 1, [1]))

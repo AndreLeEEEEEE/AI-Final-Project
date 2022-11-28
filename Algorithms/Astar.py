@@ -1,4 +1,4 @@
-from Directions import *
+from Algorithms.Directions import *
 import math
 
 def find_lowest_f(open):

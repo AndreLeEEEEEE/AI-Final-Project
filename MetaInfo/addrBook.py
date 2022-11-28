@@ -1,4 +1,3 @@
 addrBook = {
-    "Players": [],
-    "Enemies": []
+    
 }
