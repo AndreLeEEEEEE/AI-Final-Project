@@ -1,6 +1,6 @@
 from CharacterCreation.EnemyUnit import EnemyUnit
 from CharacterCreation.PlayerUnit import PlayerUnit
-from Maps.testMapTwo import testMapTwo
+from Maps.testMapTwo import testMapTwo as levelMap
 from MetaInfo.addrBook import addrBook
 from Algorithms.BFS import *
 
@@ -44,22 +44,25 @@ def main():
     Players = [PlayerUnit("Eliwood", 10, chr(65))]
     for player in Players: player.levelUp()
 
-    rowNum = len(testMapTwo)
-    colNum = len(testMapTwo[0])
+    # Spawn all units on the map
+    rowNum = len(levelMap)
+    colNum = len(levelMap[0])
     enemyAlloc = 0
     playerAlloc = 0
     for i in range(rowNum):
         for j in range(colNum):
-            if testMapTwo[i][j] == 1:
-                testMapTwo[i][j] = Players[playerAlloc]
+            if levelMap[i][j] == 1:
+                levelMap[i][j] = Players[playerAlloc]
                 addrBook.update({Players[playerAlloc]: (i, j)})
+                Players[playerAlloc].setTile((i, j))
                 playerAlloc += 1
-            elif testMapTwo[i][j] == 2:
-                testMapTwo[i][j] = Enemies[enemyAlloc]
+            elif levelMap[i][j] == 2:
+                levelMap[i][j] = Enemies[enemyAlloc]
                 addrBook.update({Enemies[enemyAlloc]: (i, j)})
+                Enemies[enemyAlloc].setTile((i, j))
                 enemyAlloc += 1
     
-    #print(testMapTwo)
+    #print(levelMap)
 
     field = [['_', '_', '_', '_', '_'],
         ['_', '_', '_', '_', PlayerUnit("Eliwood", 10, chr(65))],
@@ -68,7 +71,7 @@ def main():
         ['_', '_', '_', '_', '_']]
 
     print("Final result:", BFS(field, (2, 2), 1, [1], 2))
-    #startGame(testMapTwo, addrBook, len(Players), len(Enemies))
+    #startGame(levelMap, addrBook, len(Players), len(Enemies))
 
     
 if __name__ == "__main__":

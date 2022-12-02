@@ -8,6 +8,7 @@ def scan(field, unit, tile, target, RNG, side):
     tile - tuple of int, a tile the unit could stand on
     target - int, an enemy to attack or an injured ally to heal
     RNG - tuple of int, the range at which a unit can attack
+    side - int, the side the calling unit is on
     """
     def checkTile(row, col):
         # If the calling unit is a player unit
@@ -63,7 +64,7 @@ def scan(field, unit, tile, target, RNG, side):
             if checkTile(r-1, c-1): return True
     return False
 
-def BFS(field: list[list], unit: tuple, target: int, RNG: list, side: int):
+def BFS(field: list, unit: tuple, target: int, RNG: list, side: int):
     """Scan the map for the closest target."""
     """
     field - list of list of int/char, the map
@@ -79,7 +80,8 @@ def BFS(field: list[list], unit: tuple, target: int, RNG: list, side: int):
         toBeQueued = []
         for tile in queue:
             if scan(field, unit, tile, target, RNG, side):
-                    return tile
+                # The tile from which a unit can interact with a target
+                return tile
             appRules = applicable_rules(field, tile)
             for rule in appRules:
                 newTile = rule(tile)

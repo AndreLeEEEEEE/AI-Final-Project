@@ -12,8 +12,9 @@ from Classes.Pirate import Pirate
 from Classes.Soldier import Soldier
 from Classes.Thief import Thief
 from Classes.Troubadour import Troubadour
-from Maps.mapOne import mapOne
-from Algorithms.BFS import *
+from Maps.testMapTwo import testMapTwo as levelMap
+from Algorithms.BFS import BFS
+from Algorithms.Astar import moveTowardsTarget
 import random
 
 class EnemyUnit:
@@ -92,7 +93,7 @@ class EnemyUnit:
             "SKL": self._class.SKL,
             "MOV": self._class.MOV
         }
-        # Set growth rates and movement
+        # Set boss movement
         if boss:
             self._stats["MOV"] = 0
         self._growthRates = {
@@ -106,18 +107,27 @@ class EnemyUnit:
         }
         self._side = 2
         self._id = id
-        # Set unit type
+        # self._type handled here
         if self._name == "Cleric" or self._name == "Troubadour":
             self._type = "Support"
         else:
             self._type = "Offensive"
+        # Either passive or aggro
         self._state = "passive"
+        self._weapon = self._class.starting_items[0]
+        self._tile = (0, 0)
 
     def get_id(self):
         return self._id
 
     def get_side(self):
         return self._side
+
+    def getTile(self):
+        return self._tile
+    
+    def setTile(self, tile: tuple):
+        self._tile = tile
 
     def levelUp(self):
         for add in range(self._level):
@@ -136,7 +146,24 @@ class EnemyUnit:
                 self._stats["SPD"] += 1
             if random.random() < self._growthRates["SKL_Growth"]:
                 self._stats["SKL"] += 1
-    
+
+    def startTurn(self): # Make separate versions for offense and support
+        target = 1 if self._type == "Offensive" else 2
+        if self._state == "passive": self.toBattleState(target)
+        # If state is "aggro"
+        else: self.moveToTarget(target)
+
+    def toBattleState(self, target):
+        result = BFS(levelMap, self._tile, target, self._weapon["RNG"], self._side)
+        if type(result) != str:
+            self._state = "aggro"
+            self.moveToTarget(target)
+
+    def moveToTarget(self, target):
+        result = BFS(levelMap, self._tile, target, self._weapon["RNG"], self._side)
+        if type(result) != str:
+            moveTowardsTarget(levelMap, self._tile, target, self._stats["MOV"])
+
     def attack(self, offStat, wpnMT):
         return self._stats[offStat] + wpnMT
 
@@ -144,20 +171,9 @@ class EnemyUnit:
         self._stats["HP"] -= DMG
         if self._stats["HP"] <= 0:
             self.die(self)
-        else:
-            self._aggro = True
-
-    def switchState(self):
-        pass
-
+        
     def die(self):
-        # Update matchups and remove self from board
-        pass
+        i, j = self._tile
+        levelMap[i][j] = '_'
 
-    def target(self):
-        pass
-
-    def move(self):
-        # Move up to the unit's movement
-        pass
     

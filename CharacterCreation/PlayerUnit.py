@@ -3,8 +3,9 @@ from PlayerUnits.Hector import Hector
 from PlayerUnits.Kent import Kent
 from PlayerUnits.Sain import Sain
 from PlayerUnits.Serra import Serra
-from Maps.mapOne import mapOne
+from Maps.testMapTwo import testMapTwo as levelMap
 from Algorithms.BFS import BFS
+from Algorithms.Astar import moveTowardsTarget
 import random
 
 characters = {
@@ -43,17 +44,26 @@ class PlayerUnit:
         self._side = 1
         self._id = id
         self._type = characters[chr].type
+        # self._state handled here
         if characters[chr].type == "Offensive":
             self._state = "aggro"
         else:
             self._state = "heal"
-        self._inventory = characters[chr].starting_items
+        self._weapon = characters[chr].starting_items[0]
+        self._item = characters[chr].starting_items[0]
+        self._tile = (0, 0)
 
     def get_id(self):
         return self._id
 
     def get_side(self):
         return self._side
+
+    def getTile(self):
+        return self._tile
+
+    def setTile(self, tile: tuple):
+        self._tile = tile
 
     def levelUp(self):
         for add in range(self._level):
@@ -72,7 +82,31 @@ class PlayerUnit:
                 self._stats["SPD"] += 1
             if random.random() < self._growthRates["SKL_Growth"]:
                 self._stats["SKL"] += 1 
-        
+
+    def startTurn(self):
+        if self._stats["HP"] <= (self._stats["MaxHP"]/2):
+            self._state = "retreat"
+            # Insert code to move away from enemy
+            # Use healing item if still available
+            if self._item["Uses"] > 0:
+                self._stats["HP"] += self._item["HP"]
+                # Don't go over the unit's max HP
+                if self._stats["HP"] > self._stats["MaxHP"]:
+                    self._stats["HP"] = self._stats["MaxHP"]
+                self._item["Uses"] -=1
+        elif self._type == "Offensive":
+            self._state = "aggro"
+            self.moveToTarget(2)
+        # Type is support
+        else:
+            self._state = "heal"
+            self.moveToTarget(1)
+
+    def moveToTarget(self, target):
+        result = BFS(levelMap, self._tile, target, self._weapon["RNG"], self._side)
+        if type(result) != str:
+            moveTowardsTarget(levelMap, self._tile, target, self._stats["MOV"])
+
     def attack(self, offStat, wpnMT):
         return self._stats[offStat] + wpnMT
 
@@ -80,20 +114,11 @@ class PlayerUnit:
         self._stats["HP"] -= DMG
         if self._stats["HP"] <= 0:
             self.die(self)
-
-    def scanForTarget(self):
-        target = 2 if self._type == "Offensive" else 1
-        RNG = self._inventory[0]["RNG"]
-        BFS(mapOne, target, RNG)
         
     def die(self):
         if self._class == "Lord":
             # Trigger game over
             pass
-        # Update matchups and remove self from board
-        pass
-
-    def move(self):
-        # Move up to the unit's movement
-        pass
-    
+        i, j = self._tile
+        levelMap[i][j] = '_'
+        

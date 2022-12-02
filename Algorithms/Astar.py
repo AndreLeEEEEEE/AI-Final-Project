@@ -132,7 +132,7 @@ field = [['_', '_', '_', '_', '_'],
         ['_', '_', '_', 'W', '_']]
 
 
-def moveTowardsTarget(field, unit, target, mov):
+def moveTowardsTarget(field: list, unit: tuple, target: int, mov: int):
     path = Astar(field, [Tile(unit)], target)
     # print(path)
     newPosition = list(unit)
@@ -145,4 +145,4 @@ def moveTowardsTarget(field, unit, target, mov):
             break
     return tuple(newPosition)
 
-print(moveTowardsTarget(field, (1, 3), (4, 2), 4))
+# print(moveTowardsTarget(field, (1, 3), (4, 2), 4))
