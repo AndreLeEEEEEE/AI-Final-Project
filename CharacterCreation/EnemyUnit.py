@@ -13,7 +13,7 @@ from Classes.Soldier import Soldier
 from Classes.Thief import Thief
 from Classes.Troubadour import Troubadour
 from Maps.testMapTwo import testMapTwo as levelMap
-from Algorithms.BFS import BFS
+from Algorithms.BFS import *
 from Algorithms.Astar import moveTowardsTarget
 import random
 
@@ -115,6 +115,7 @@ class EnemyUnit:
         # Either passive or aggro
         self._state = "passive"
         self._weapon = self._class.starting_items[0]
+        # Where the unit currently is
         self._tile = (0, 0)
 
     def get_id(self):
@@ -128,6 +129,15 @@ class EnemyUnit:
     
     def setTile(self, tile: tuple):
         self._tile = tile
+
+    def getSpd(self):
+        return self._stats["SPD"]
+
+    def getRng(self):
+        return self._stats["RNG"]
+
+    def getType(self):
+        return self._type
 
     def levelUp(self):
         for add in range(self._level):
@@ -154,26 +164,104 @@ class EnemyUnit:
         else: self.moveToTarget(target)
 
     def toBattleState(self, target):
-        result = BFS(levelMap, self._tile, target, self._weapon["RNG"], self._side)
-        if type(result) != str:
+        if self._type == "Offensive":
+            # Stop this at MOV
+            result = BFS(levelMap, self._tile, target,
+                            self._weapon["RNG"], self._side, self._stats["MOV"])
+        # If type is support
+        else:
+            result = BFS(levelMap, self._tile, target,
+                            self._weapon["RNG"], self._side)
+        if result:
             self._state = "aggro"
             self.moveToTarget(target)
 
     def moveToTarget(self, target):
         result = BFS(levelMap, self._tile, target, self._weapon["RNG"], self._side)
-        if type(result) != str:
+        if result:
             moveTowardsTarget(levelMap, self._tile, target, self._stats["MOV"])
+            targetCoord = scan(levelMap, self._tile, self._tile,
+                                target, self._weapon["RNG"], self._side)
+            if targetCoord:
+                i, j = targetCoord
+                unitTarget = levelMap[i][j]
+                self.attack(unitTarget)
 
-    def attack(self, offStat, wpnMT):
-        return self._stats[offStat] + wpnMT
+    def attack(self, unitTarget):
+        """Handle all rounds of combat and healing."""
+        attack = self.calculateAttack()
+        spdDiff = self._stats["SPD"] - unitTarget.getSpd()
+        # Initial attack
+        # Always triggers
+        if random.randrange(1, 101) < self.calculateAccuracy(unitTarget):
+            heal = False if self._weapon["offense"] else True
+            if unitTarget.takeDMG(attack, self._weapon["type"], heal):
+                # Stop combat if the target dies
+                return
+        # Counterattack
+        # Only triggers if the target unit can counter attack
+        # Support units cannot defend themselves
+        if unitTarget.getType() == "Support": return
+        # Units ranges have to be equal to counterattack
+        if set(unitTarget.getRng()) & set(self.getRng()):
+            if random.randrange(1, 101) < unitTarget.calculateAccuracy(self):
+                heal = False if unitTarget._weapon["offense"] else True
+                if self.takeDMG(unitTarget.calculateAttack(), unitTarget._weapon["type"], heal):
+                    # Stop combat if the unit dies
+                    return
+        # Follow-up attack
+        if spdDiff >= 4:
+            if random.randrange(1, 101) < self.calculateAccuracy(unitTarget):
+                heal = False if self._weapon["offense"] else True
+                if unitTarget.takeDMG(attack, self._weapon["type"], heal):
+                    # Stop combat if the target dies
+                    return
 
-    def takeDMG(self, DMG):
-        self._stats["HP"] -= DMG
-        if self._stats["HP"] <= 0:
-            self.die(self)
+    def calculateAttack(self):
+        """Get the attack value."""
+        attack: int = self._weapon["MT"]
+        if self._weapon["type"] == "STR": attack += self._stats["STR"]
+        elif self._weapon["type"] == "MAG": attack += self._stats["MAG"]
+        # If weapon is a stave
+        if not self._weapon["offense"]: attack *= -1
+
+        return attack
+
+    def calculateHit(self, unitTarget):
+        """Determine if the attack lands"""
+        accuracy = self.calculateAccuracy(unitTarget)
+
+    def calculateAccuracy(self, unitTarget):
+        """Get the attack accuracy."""
+        hitRate: int = (self._stats["SKL"] * 2) + self._weapon["HIT"]
+        evade: int = unitTarget.getSpd()
+
+        return hitRate - evade
+
+    def takeDMG(self, DMG, damageType, heal):
+        """Handle taking damage."""
+        if heal:
+            self._stats["HP"] -= DMG
+            # Prevent excess HP via healing
+            if self._stats["HP"] > self._stats["MaxHP"]:
+                self._stats["HP"] = self._stats["MaxHP"]
+            return True
+        else:
+            if damageType == "STR":
+                mitigate = DMG - self._stats["DEF"]
+                if mitigate >= 0:
+                    self._stats["HP"] -= mitigate
+            elif damageType == "MAG":
+                mitigate = DMG - self._stats["RES"]
+                if mitigate >= 0:
+                    self._stats["HP"] -= mitigate
+            if self._stats["HP"] <= 0:
+                return self.die(self)
+        
+        return False
         
     def die(self):
         i, j = self._tile
         levelMap[i][j] = '_'
 
-    
+        return True

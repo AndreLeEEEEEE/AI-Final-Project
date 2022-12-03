@@ -1,13 +1,14 @@
 from Algorithms.Directions import *
 
-def scan(field, unit, tile, target, RNG, side):
+def scan(field: list, unit: tuple, tile: tuple, target: int, RNG: list, side: int):
     """From the current tile, scan for targets in range."""
     """
     field - list of list of int/char, the map
-    unit - tuple of int, the tile unit is currently on
+    unit - tuple of int, the tile unit is currently on,
+            used so the unit doesn't target themselves
     tile - tuple of int, a tile the unit could stand on
     target - int, an enemy to attack or an injured ally to heal
-    RNG - tuple of int, the range at which a unit can attack
+    RNG - list of int, the range at which a unit can attack
     side - int, the side the calling unit is on
     """
     def checkTile(row, col):
@@ -49,32 +50,34 @@ def scan(field, unit, tile, target, RNG, side):
     r, c = tile
     for num in RNG:
         if num == 1:
-            if checkTile(r+1, c): return True
-            if checkTile(r-1, c): return True
-            if checkTile(r, c+1): return True
-            if checkTile(r, c-1): return True
+            if checkTile(r+1, c): return (r+1, c)
+            if checkTile(r-1, c): return (r-1, c)
+            if checkTile(r, c+1): return (r, c+1)
+            if checkTile(r, c-1): return (r, c-1)
         else:
-            if checkTile(r+2, c): return True
-            if checkTile(r-2, c): return True
-            if checkTile(r, c+2): return True
-            if checkTile(r, c-2): return True
-            if checkTile(r+1, c+1): return True
-            if checkTile(r+1, c-1): return True
-            if checkTile(r-1, c+1): return True
-            if checkTile(r-1, c-1): return True
+            if checkTile(r+2, c): return (r+2, c)
+            if checkTile(r-2, c): return (r-2, c)
+            if checkTile(r, c+2): return (r, c+2)
+            if checkTile(r, c-2): return (r, c-2)
+            if checkTile(r+1, c+1): return (r+1, c+1)
+            if checkTile(r+1, c-1): return (r+1, c-1)
+            if checkTile(r-1, c+1): return (r-1, c+1)
+            if checkTile(r-1, c-1): return (r-1, c-1)
     return False
 
-def BFS(field: list, unit: tuple, target: int, RNG: list, side: int):
+def BFS(field: list, unit: tuple, target: int, RNG: list, side: int, MOV: int = False):
     """Scan the map for the closest target."""
     """
     field - list of list of int/char, the map
     unit - tuple of int, the unit's current position
     target - int, an enemy to attack or an injured ally to heal
-    RNG - tuple of int, the range at which the unit can act
+    RNG - list of int, the range at which the unit can act
     side - int, the side the calling unit is on
+    MOV - int, if present, denotes the level at which BFS should stop
     """
     visited = []
     queue = [unit]
+    mov = 0
 
     while queue:
         toBeQueued = []
@@ -90,8 +93,13 @@ def BFS(field: list, unit: tuple, target: int, RNG: list, side: int):
         visited += queue
         queue.clear()
         queue += toBeQueued
+        # Stop BFS if it doesn't find a target within these Moves
+        if MOV:
+            mov += 1
+            if mov >= MOV:
+                break
 
-    return "No target found"
+    return False
 
 field = [['_', '_', '_', '_', '_'],
         ['_', '_', '_', '_', 1],
