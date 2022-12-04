@@ -65,7 +65,7 @@ def scan(field: list, unit: tuple, tile: tuple, target: int, RNG: list, side: in
             if checkTile(r-1, c-1): return (r-1, c-1)
     return False
 
-def BFS(field: list, unit: tuple, target: int, RNG: list, side: int, MOV: int = False):
+def BFS(field: list, unit: tuple, target: int, RNG: list, side: int, MOV = False):
     """Scan the map for the closest target."""
     """
     field - list of list of int/char, the map
@@ -73,10 +73,11 @@ def BFS(field: list, unit: tuple, target: int, RNG: list, side: int, MOV: int = 
     target - int, an enemy to attack or an injured ally to heal
     RNG - list of int, the range at which the unit can act
     side - int, the side the calling unit is on
-    MOV - int, if present, denotes the level at which BFS should stop
+    MOV - int/False, if int, denotes the level at which BFS should stop
     """
     visited = []
     queue = [unit]
+    # Indicates which level BFS is on
     mov = 0
 
     while queue:
@@ -94,21 +95,9 @@ def BFS(field: list, unit: tuple, target: int, RNG: list, side: int, MOV: int = 
         queue.clear()
         queue += toBeQueued
         # Stop BFS if it doesn't find a target within these Moves
-        if MOV:
+        if type(MOV) is int:
             mov += 1
             if mov >= MOV:
                 break
 
     return False
-
-field = [['_', '_', '_', '_', '_'],
-        ['_', '_', '_', '_', 1],
-        ['_', '_', 1, '_', '_'],
-        ['_', '_', '_', '_', '_'],
-        ['_', '_', '_', '_', '_']]
-
-# field = [['_', 'V', 'V', 'V', '_'],
-#         ['V', 'V', 'V', 'V', '2'],
-#         ['V', 'V', 'U', 'V', 'V'],
-#         ['_', 'V', 'V', 'V', '_'],
-#         ['_', '_', 'V', '_', '_']]

@@ -3,9 +3,10 @@ from PlayerUnits.Hector import Hector
 from PlayerUnits.Kent import Kent
 from PlayerUnits.Sain import Sain
 from PlayerUnits.Serra import Serra
-from Maps.testMapTwo import testMapTwo as levelMap
+from Maps.testMapThree import testMapThree as levelMap
 from Algorithms.BFS import *
 from Algorithms.Astar import moveTowardsTarget
+from Algorithms.Astar import manhattan_dist
 import random
 
 characters = {
@@ -19,6 +20,7 @@ characters = {
 class PlayerUnit:
     def __init__(self, chr, level, id):
         self._name = chr
+        # Is string
         self._class = characters[chr]._class
         self._level = level
         self._stats = {
@@ -52,6 +54,7 @@ class PlayerUnit:
         self._weapon = characters[chr].starting_items[0]
         self._item = characters[chr].starting_items[0]
         self._tile = (0, 0)
+        self._dead = False
 
     def get_id(self):
         return self._id
@@ -68,9 +71,17 @@ class PlayerUnit:
     def getSpd(self):
         return self._stats["SPD"]
 
-    def getDR(self, damageType):
-        if damageType == "STR": return self._stats["DEF"]
-        elif damageType == "MAG": return self._stats["RES"]
+    def getRng(self):
+        return self._stats["RNG"]
+
+    def getType(self):
+        return self._type
+
+    def getClass(self):
+        return self._class
+
+    def getDead(self):
+        return self._dead
 
     def levelUp(self):
         for add in range(self._level):
@@ -110,9 +121,12 @@ class PlayerUnit:
             self.moveToTarget(1)
 
     def moveToTarget(self, target):
+        # Find tile from which a target can be interacted with
         result = BFS(levelMap, self._tile, target, self._weapon["RNG"], self._side)
         if result:
-            moveTowardsTarget(levelMap, self._tile, target, self._stats["MOV"])
+            # Move to that tile, may or may not reach tile
+            self.setTile(moveTowardsTarget(levelMap, self._tile, target, self._stats["MOV"]))
+            # Check if there's a target in range of this tile
             targetCoord = scan(levelMap, self._tile, self._tile,
                                 target, self._weapon["RNG"], self._side)
             if targetCoord:
@@ -132,21 +146,21 @@ class PlayerUnit:
                 # Stop combat if the target dies
                 return
         # Counterattack
-        # Only triggers if the target unit can counter attack
         # Support units cannot defend themselves
-        if unitTarget.getType() == "Support": return
-        # Units ranges have to be equal to counterattack
-        if set(unitTarget.getRng()) & set(self.getRng()):
+        # Don't trigger a counterattack when healing
+        # Only triggers if the target unit can attack at the used RNG
+        if (unitTarget.getType() == "Offensive" 
+            and self._type == "Offensive"
+            and set(unitTarget.getRng()) & set(self.getRngInUse(unitTarget))):
             if random.randrange(1, 101) < unitTarget.calculateAccuracy(self):
-                heal = False if unitTarget._weapon["offense"] else True
-                if self.takeDMG(unitTarget.calculateAttack(), unitTarget._weapon["type"], heal):
+                if self.takeDMG(unitTarget.calculateAttack(), unitTarget._weapon["type"], False):
                     # Stop combat if the unit dies
                     return
         # Follow-up attack
-        if spdDiff >= 4:
+        # Do not make a follow-up attack for healing
+        if spdDiff >= 4 and self._type == "Offensive":
             if random.randrange(1, 101) < self.calculateAccuracy(unitTarget):
-                heal = False if self._weapon["offense"] else True
-                if unitTarget.takeDMG(attack, self._weapon["type"], heal):
+                if unitTarget.takeDMG(attack, self._weapon["type"], False):
                     # Stop combat if the target dies
                     return
 
@@ -171,6 +185,9 @@ class PlayerUnit:
 
         return hitRate - evade
 
+    def getRngInUse(self, unitTarget):
+        return [manhattan_dist(self.getTile(), unitTarget.getTile())]
+
     def takeDMG(self, DMG, damageType, heal):
         """Handle taking damage."""
         if heal:
@@ -181,21 +198,23 @@ class PlayerUnit:
             return True
         else:
             if damageType == "STR":
-                mitigate = DMG - self._stats["DEF"]
-                if mitigate >= 0:
-                    self._stats["HP"] -= mitigate
+                leftoverDMG = DMG - self._stats["DEF"]
+                if leftoverDMG >= 0:
+                    self._stats["HP"] -= leftoverDMG
             elif damageType == "MAG":
-                mitigate = DMG - self._stats["RES"]
-                if mitigate >= 0:
-                    self._stats["HP"] -= mitigate
+                leftoverDMG = DMG - self._stats["RES"]
+                if leftoverDMG >= 0:
+                    self._stats["HP"] -= leftoverDMG
             if self._stats["HP"] <= 0:
-                return self.die(self)
+                return self.die()
         
         return False
         
     def die(self):
         i, j = self._tile
+        # Remove self from map
         levelMap[i][j] = '_'
+        self._dead = True
 
         return True
         

@@ -1,48 +1,73 @@
 from CharacterCreation.EnemyUnit import EnemyUnit
 from CharacterCreation.PlayerUnit import PlayerUnit
-from Maps.testMapTwo import testMapTwo as levelMap
-from MetaInfo.addrBook import addrBook
+from Maps.testMapThree import testMapThree as levelMap
+from MetaInfo.statusBook import statusBook
 from Algorithms.BFS import *
+import copy
 
-def PlayerArmyTurn(field, players):
-    for coord in players:
-        unit = field[coord[0], coord[1]]
-    return ()
+def checkLords(statusBook):
+    lords = 0
+    for player in statusBook["Players"]:
+        if player.getClass() == "Lord": lords += 1
 
-def EnemyArmyTurn(field, enemies):
-    for coord in enemies:
-        unit = field[coord[0], coord[1]]
-    return ()
+    return False if lords != statusBook["Lords"] else True
 
-def startGame(field, addrBook, playerCount, enemyCount):
+def updateInfo(statusBook):
+    """Remove dead units from statusBook."""
+    # For player units
+    playerCopy = copy.deepcopy(statusBook["Players"])
+    for player in statusBook["Players"]:
+        if player.getDead(): playerCopy.remove(player)
+    statusBook["Players"] = playerCopy
+    # For enemy units
+    enemyCopy = copy.deepcopy(statusBook["Enemies"])
+    for enemy in statusBook["Enemies"]:
+        if enemy.getDead(): enemyCopy.remove(enemy)
+    statusBook["Enemies"] = enemyCopy
+
+def PlayerArmyTurn(statusBook):
+    for player in statusBook["Players"]:
+        player.startTurn()
+        updateInfo(statusBook)
+    return len(statusBook["Players"])
+
+def EnemyArmyTurn(statusBook):
+    for enemy in statusBook["Enemies"]:
+        enemy.startTurn()
+        updateInfo(statusBook)
+    return len(statusBook["Enemies"])
+
+def startGame(statusBook, playerCount, enemyCount):
     isPlayerTurn = True
+    endCondition = ""
+    win = False
     while(playerCount > 0 and enemyCount > 0):
         if isPlayerTurn:
-            playerCount, enemyCount = PlayerArmyTurn(field, addrBook["Players"])
-            isPlayerTurn = not(isPlayerTurn)
+            playerCount = PlayerArmyTurn(statusBook)
         else:
-            playerCount, enemyCount = EnemyArmyTurn(field, addrBook["Enemies"])
-            isPlayerTurn = not(isPlayerTurn)
+            enemyCount = EnemyArmyTurn(statusBook)
+        # If any Lord player unit died
+        if not checkLords(statusBook):
+            endCondition = "A Lord unit has died."
+            break
+        isPlayerTurn = not(isPlayerTurn)
+
+    if playerCount <= 0:
+        endCondition = "The player army was routed."
+    elif enemyCount <= 0:
+        endCondition = "The enemy army was routed."
+        win = True
+
+    return (endCondition, win)
+
 
 def main():
-    # Enemies = [EnemyUnit(10) for create in range(1)]
-    # # Add boss unit
-    # Enemies.append(EnemyUnit(12, True))
-    # for enemy in Enemies: enemy.levelUp()
-    # for enemy in Enemies:
-    #     print(enemy._name)
-    #     print(enemy._stats)
-
-    # Players = [PlayerUnit("Eliwood", 10), PlayerUnit("Hector", 10),
-    #             PlayerUnit("Serra", 10), PlayerUnit("Sain", 10),
-    #             PlayerUnit("Kent", 10)]
-
+    # Create enemy units
     enemyID = 97
     Enemies = [EnemyUnit(10, chr(enemyID+create)) for create in range(1)]
-    for enemy in Enemies: enemy.levelUp()
 
+    # Create player units
     Players = [PlayerUnit("Eliwood", 10, chr(65))]
-    for player in Players: player.levelUp()
 
     # Spawn all units on the map
     rowNum = len(levelMap)
@@ -53,25 +78,24 @@ def main():
         for j in range(colNum):
             if levelMap[i][j] == 1:
                 levelMap[i][j] = Players[playerAlloc]
-                addrBook.update({Players[playerAlloc]: (i, j)})
+                statusBook["Players"].append(Players[playerAlloc])
                 Players[playerAlloc].setTile((i, j))
+                Players[playerAlloc].levelUp()
+                if Players[playerAlloc].getClass() == "Lord": statusBook["Lords"] += 1
                 playerAlloc += 1
             elif levelMap[i][j] == 2:
                 levelMap[i][j] = Enemies[enemyAlloc]
-                addrBook.update({Enemies[enemyAlloc]: (i, j)})
+                statusBook["Enemies"].append(Enemies[enemyAlloc])
                 Enemies[enemyAlloc].setTile((i, j))
+                Enemies[enemyAlloc].levelUp()
                 enemyAlloc += 1
     
-    #print(levelMap)
-
-    field = [['_', '_', '_', '_', '_'],
-        ['_', '_', '_', '_', PlayerUnit("Eliwood", 10, chr(65))],
-        ['_', '_', 1, '_', '_'],
-        ['_', '_', '_', '_', '_'],
-        ['_', '_', '_', '_', '_']]
-
-    print("Final result:", BFS(field, (2, 2), 1, [1], 2))
-    #startGame(levelMap, addrBook, len(Players), len(Enemies))
+    endMessage, win = startGame(statusBook, len(Players), len(Enemies))
+    if win:
+        print("\nThe player army has won!")
+    else:
+        print("\nThe enemy army has won.")
+    print(endMessage)
 
     
 if __name__ == "__main__":

@@ -12,9 +12,10 @@ from Classes.Pirate import Pirate
 from Classes.Soldier import Soldier
 from Classes.Thief import Thief
 from Classes.Troubadour import Troubadour
-from Maps.testMapTwo import testMapTwo as levelMap
+from Maps.testMapThree import testMapThree as levelMap
 from Algorithms.BFS import *
 from Algorithms.Astar import moveTowardsTarget
+from Algorithms.Astar import manhattan_dist
 import random
 
 class EnemyUnit:
@@ -117,6 +118,7 @@ class EnemyUnit:
         self._weapon = self._class.starting_items[0]
         # Where the unit currently is
         self._tile = (0, 0)
+        self._dead = False
 
     def get_id(self):
         return self._id
@@ -177,9 +179,12 @@ class EnemyUnit:
             self.moveToTarget(target)
 
     def moveToTarget(self, target):
+        # Find tile from which a target can be interacted with
         result = BFS(levelMap, self._tile, target, self._weapon["RNG"], self._side)
         if result:
-            moveTowardsTarget(levelMap, self._tile, target, self._stats["MOV"])
+            # Move to that tile, may or may not reach tile
+            self.setTile(moveTowardsTarget(levelMap, self._tile, target, self._stats["MOV"]))
+            # Check if there's a target in range of this tile
             targetCoord = scan(levelMap, self._tile, self._tile,
                                 target, self._weapon["RNG"], self._side)
             if targetCoord:
@@ -199,21 +204,21 @@ class EnemyUnit:
                 # Stop combat if the target dies
                 return
         # Counterattack
-        # Only triggers if the target unit can counter attack
         # Support units cannot defend themselves
-        if unitTarget.getType() == "Support": return
-        # Units ranges have to be equal to counterattack
-        if set(unitTarget.getRng()) & set(self.getRng()):
+        # Don't trigger a counterattack when healing
+        # Only triggers if the target unit can attack at the used RNG
+        if (unitTarget.getType() == "Offensive" 
+            and self._type == "Offensive"
+            and set(unitTarget.getRng()) & set(self.getRngInUse(unitTarget))):
             if random.randrange(1, 101) < unitTarget.calculateAccuracy(self):
-                heal = False if unitTarget._weapon["offense"] else True
-                if self.takeDMG(unitTarget.calculateAttack(), unitTarget._weapon["type"], heal):
+                if self.takeDMG(unitTarget.calculateAttack(), unitTarget._weapon["type"], False):
                     # Stop combat if the unit dies
                     return
         # Follow-up attack
-        if spdDiff >= 4:
+        # Do not make a follow-up attack for healing
+        if spdDiff >= 4 and self._type == "Offensive":
             if random.randrange(1, 101) < self.calculateAccuracy(unitTarget):
-                heal = False if self._weapon["offense"] else True
-                if unitTarget.takeDMG(attack, self._weapon["type"], heal):
+                if unitTarget.takeDMG(attack, self._weapon["type"], False):
                     # Stop combat if the target dies
                     return
 
@@ -238,6 +243,9 @@ class EnemyUnit:
 
         return hitRate - evade
 
+    def getRngInUse(self, unitTarget):
+        return [manhattan_dist(self.getTile(), unitTarget.getTile())]
+
     def takeDMG(self, DMG, damageType, heal):
         """Handle taking damage."""
         if heal:
@@ -248,20 +256,22 @@ class EnemyUnit:
             return True
         else:
             if damageType == "STR":
-                mitigate = DMG - self._stats["DEF"]
-                if mitigate >= 0:
-                    self._stats["HP"] -= mitigate
+                leftoverDMG = DMG - self._stats["DEF"]
+                if leftoverDMG >= 0:
+                    self._stats["HP"] -= leftoverDMG
             elif damageType == "MAG":
-                mitigate = DMG - self._stats["RES"]
-                if mitigate >= 0:
-                    self._stats["HP"] -= mitigate
+                leftoverDMG = DMG - self._stats["RES"]
+                if leftoverDMG >= 0:
+                    self._stats["HP"] -= leftoverDMG
             if self._stats["HP"] <= 0:
-                return self.die(self)
+                return self.die()
         
         return False
         
     def die(self):
         i, j = self._tile
+        # Remove self from map
         levelMap[i][j] = '_'
+        self._dead = True
 
         return True

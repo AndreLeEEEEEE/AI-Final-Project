@@ -82,7 +82,7 @@ def manhattan_dist(tile, target):
     """
     row, col = tile
     tRow, tCol = target
-    return abs(tRow-row) + abs(tCol-col)
+    return int(abs(tRow-row) + abs(tCol-col))
 
 def return_tiles(queue):
     """Get the list of coordinates of all tiles in the queue."""
@@ -133,6 +133,13 @@ field = [['_', '_', '_', '_', '_'],
 
 
 def moveTowardsTarget(field: list, unit: tuple, target: int, mov: int):
+    """Move as close to the target as possible with the given MOV."""
+    """
+    field - list of list of int/char, the map
+    unit - tuple of int, the tile the unit is on
+    target - tuple of int, the tile to move to
+    mov - int, the number of tiles the unit can move
+    """
     path = Astar(field, [Tile(unit)], target)
     # print(path)
     newPosition = list(unit)
@@ -144,5 +151,3 @@ def moveTowardsTarget(field: list, unit: tuple, target: int, mov: int):
         if tuple(newPosition) == target:
             break
     return tuple(newPosition)
-
-# print(moveTowardsTarget(field, (1, 3), (4, 2), 4))
