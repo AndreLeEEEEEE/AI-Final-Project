@@ -5,15 +5,18 @@ def scan(field: list, unit: tuple, tile: tuple, target: int, RNG: list, side: in
     """
     field - list of list of int/char, the map
     unit - tuple of int, the tile unit is currently on,
-            used so the unit doesn't target themselves
+            used so support units don't target themselves
     tile - tuple of int, a tile the unit could stand on
     target - int, an enemy to attack or an injured ally to heal
     RNG - list of int, the range at which a unit can attack
     side - int, the side the calling unit is on
     """
     def checkTile(row, col):
+        # Instantly fail if the coordinates is supposed to be out-of-bounds
+        if row < 0 or col < 0: return False
         # If the calling unit is a player unit
         if side == 1:
+            # In side 1
             try:
                 position = field[row][col]
                 # Look for injured ally
@@ -31,6 +34,7 @@ def scan(field: list, unit: tuple, tile: tuple, target: int, RNG: list, side: in
                 return False
         # If the calling unit is an enemy unit
         else:
+            # In side 2
             try:
                 position = field[row][col]
                 # Look for injured ally

@@ -8,34 +8,30 @@ import copy
 def checkLords(statusBook):
     lords = 0
     for player in statusBook["Players"]:
-        if player.getClass() == "Lord": lords += 1
+        if (player.getClass() == "Lord"
+            and not player.getDead()): lords += 1
 
     return False if lords != statusBook["Lords"] else True
 
-def updateInfo(statusBook):
-    """Remove dead units from statusBook."""
-    # For player units
-    playerCopy = copy.deepcopy(statusBook["Players"])
-    for player in statusBook["Players"]:
-        if player.getDead(): playerCopy.remove(player)
-    statusBook["Players"] = playerCopy
-    # For enemy units
-    enemyCopy = copy.deepcopy(statusBook["Enemies"])
-    for enemy in statusBook["Enemies"]:
-        if enemy.getDead(): enemyCopy.remove(enemy)
-    statusBook["Enemies"] = enemyCopy
+def unitCount(statusBook):
+    playersLeft = len(list(filter(lambda unit: not unit.getDead(), statusBook["Players"])))
+    enemiesLeft = len(list(filter(lambda unit: not unit.getDead(), statusBook["Enemies"])))
+    
+    return (playersLeft, enemiesLeft)
 
 def PlayerArmyTurn(statusBook):
+    print("---------Player turn start---------")
     for player in statusBook["Players"]:
-        player.startTurn()
-        updateInfo(statusBook)
-    return len(statusBook["Players"])
+        if not player.getDead(): player.startTurn()
+    print(levelMap)
+    return unitCount(statusBook)
 
 def EnemyArmyTurn(statusBook):
+    print("---------Enemy turn start---------")
     for enemy in statusBook["Enemies"]:
-        enemy.startTurn()
-        updateInfo(statusBook)
-    return len(statusBook["Enemies"])
+        if not enemy.getDead(): enemy.startTurn()
+    print(levelMap)
+    return unitCount(statusBook)
 
 def startGame(statusBook, playerCount, enemyCount):
     isPlayerTurn = True
@@ -43,9 +39,9 @@ def startGame(statusBook, playerCount, enemyCount):
     win = False
     while(playerCount > 0 and enemyCount > 0):
         if isPlayerTurn:
-            playerCount = PlayerArmyTurn(statusBook)
+            playerCount, enemyCount = PlayerArmyTurn(statusBook)
         else:
-            enemyCount = EnemyArmyTurn(statusBook)
+            playerCount, enemyCount = EnemyArmyTurn(statusBook)
         # If any Lord player unit died
         if not checkLords(statusBook):
             endCondition = "A Lord unit has died."
@@ -87,7 +83,7 @@ def main():
                 levelMap[i][j] = Enemies[enemyAlloc]
                 statusBook["Enemies"].append(Enemies[enemyAlloc])
                 Enemies[enemyAlloc].setTile((i, j))
-                Enemies[enemyAlloc].levelUp()
+                Enemies[enemyAlloc].levelUp() 
                 enemyAlloc += 1
     
     endMessage, win = startGame(statusBook, len(Players), len(Enemies))

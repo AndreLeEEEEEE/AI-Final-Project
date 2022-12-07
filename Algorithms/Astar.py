@@ -125,14 +125,7 @@ def Astar(field, open, target):
                         open.append(genTile)
                         break
 
-field = [['_', '_', '_', '_', '_'],
-        ['_', '_', '_', 'U', '_'],
-        ['_', 'W', 'W', 'W', '_'],
-        ['_', '_', '_', '_', '_'],
-        ['_', '_', '_', 'W', '_']]
-
-
-def moveTowardsTarget(field: list, unit: tuple, target: int, mov: int):
+def moveTowardsTarget(field: list, unit: tuple, target: tuple, mov: int):
     """Move as close to the target as possible with the given MOV."""
     """
     field - list of list of int/char, the map
@@ -140,14 +133,17 @@ def moveTowardsTarget(field: list, unit: tuple, target: int, mov: int):
     target - tuple of int, the tile to move to
     mov - int, the number of tiles the unit can move
     """
-    path = Astar(field, [Tile(unit)], target)
-    # print(path)
-    newPosition = list(unit)
-    for m in range(mov):
-        # print(path[m])
-        newPosition = list(path[m](newPosition))
-        # Prevent invalid indexing when the unit needs less
-        # movement than they have to reach the target
-        if tuple(newPosition) == target:
-            break
-    return tuple(newPosition)
+    # Do nothing if the unit is already at the target
+    if unit == target: return unit
+    # Use Astar if the target hasn't been reached
+    else:
+        path = Astar(field, [Tile(unit)], target)
+        newPosition = list(unit)
+        for m in range(mov):
+            rule = path[m]
+            newPosition = list(rule(newPosition))
+            # Prevent invalid indexing when the unit needs less
+            # movement than they have to reach the target
+            if tuple(newPosition) == target:
+                break
+        return tuple(newPosition)

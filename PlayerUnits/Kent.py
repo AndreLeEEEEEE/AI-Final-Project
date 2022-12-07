@@ -1,9 +1,10 @@
 from Items.Weapons.Lance import Lance
+from Items.Miscellaneous.Vulnerary import Vulnerary
 
 class Kent:
     def __init__(self):
         self._class = "Cavalier"
-        self.starting_items = [Lance]
+        self.starting_items = [Lance, Vulnerary]
         self.HP = 20
         self.STR = 6
         self.MAG = 0

@@ -52,7 +52,7 @@ class PlayerUnit:
         else:
             self._state = "heal"
         self._weapon = characters[chr].starting_items[0]
-        self._item = characters[chr].starting_items[0]
+        self._item = characters[chr].starting_items[1]
         self._tile = (0, 0)
         self._dead = False
 
@@ -72,7 +72,7 @@ class PlayerUnit:
         return self._stats["SPD"]
 
     def getRng(self):
-        return self._stats["RNG"]
+        return self._weapon["RNG"]
 
     def getType(self):
         return self._type
@@ -103,10 +103,12 @@ class PlayerUnit:
 
     def startTurn(self):
         if self._stats["HP"] <= (self._stats["MaxHP"]/2):
+            print(f"{self._name} is retreating")
             self._state = "retreat"
             # Insert code to move away from enemy
             # Use healing item if still available
             if self._item["Uses"] > 0:
+                print(f"{self._name} used their vulnerary")
                 self._stats["HP"] += self._item["HP"]
                 # Don't go over the unit's max HP
                 if self._stats["HP"] > self._stats["MaxHP"]:
@@ -114,6 +116,7 @@ class PlayerUnit:
                 self._item["Uses"] -=1
         elif self._type == "Offensive":
             self._state = "aggro"
+            print(f"{self._name} is advancing")
             self.moveToTarget(2)
         # Type is support
         else:
@@ -125,7 +128,12 @@ class PlayerUnit:
         result = BFS(levelMap, self._tile, target, self._weapon["RNG"], self._side)
         if result:
             # Move to that tile, may or may not reach tile
-            self.setTile(moveTowardsTarget(levelMap, self._tile, target, self._stats["MOV"]))
+            newPosition = moveTowardsTarget(levelMap, self._tile, 
+                                            result, self._stats["MOV"])
+            
+            levelMap[self._tile[0]][self._tile[1]] = '_'
+            self.setTile(newPosition)
+            levelMap[newPosition[0]][newPosition[1]] = self
             # Check if there's a target in range of this tile
             targetCoord = scan(levelMap, self._tile, self._tile,
                                 target, self._weapon["RNG"], self._side)
@@ -140,11 +148,16 @@ class PlayerUnit:
         spdDiff = self._stats["SPD"] - unitTarget.getSpd()
         # Initial attack
         # Always triggers
+        if self._type == "Offensive":
+            print(f"{self._name} attacks the {unitTarget._name}")
+        else:
+            print(f"{self._name} heals {unitTarget._name}")
         if random.randrange(1, 101) < self.calculateAccuracy(unitTarget):
             heal = False if self._weapon["offense"] else True
             if unitTarget.takeDMG(attack, self._weapon["type"], heal):
                 # Stop combat if the target dies
                 return
+        else: print(f"{self._name}'s attack missed")
         # Counterattack
         # Support units cannot defend themselves
         # Don't trigger a counterattack when healing
@@ -152,17 +165,21 @@ class PlayerUnit:
         if (unitTarget.getType() == "Offensive" 
             and self._type == "Offensive"
             and set(unitTarget.getRng()) & set(self.getRngInUse(unitTarget))):
+            print(f"The {unitTarget._name} counterattacks")
             if random.randrange(1, 101) < unitTarget.calculateAccuracy(self):
                 if self.takeDMG(unitTarget.calculateAttack(), unitTarget._weapon["type"], False):
                     # Stop combat if the unit dies
                     return
+            else: print(f"The {unitTarget._name}'s attack missed")
         # Follow-up attack
         # Do not make a follow-up attack for healing
         if spdDiff >= 4 and self._type == "Offensive":
             if random.randrange(1, 101) < self.calculateAccuracy(unitTarget):
+                print(f"{self._name} performs a follow-up attack")
                 if unitTarget.takeDMG(attack, self._weapon["type"], False):
                     # Stop combat if the target dies
                     return
+            else: print(f"{self._name}'s attack missed")
 
     def calculateAttack(self):
         """Get the attack value."""
@@ -215,6 +232,7 @@ class PlayerUnit:
         # Remove self from map
         levelMap[i][j] = '_'
         self._dead = True
+        print(f"{self._name} died")
 
         return True
         
