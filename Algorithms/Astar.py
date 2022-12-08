@@ -140,10 +140,10 @@ def moveTowardsTarget(field: list, unit: tuple, target: tuple, mov: int):
         path = Astar(field, [Tile(unit)], target)
         newPosition = list(unit)
         for m in range(mov):
-            rule = path[m]
-            newPosition = list(rule(newPosition))
             # Prevent invalid indexing when the unit needs less
             # movement than they have to reach the target
             if tuple(newPosition) == target:
                 break
+            rule = path[m]
+            newPosition = list(rule(newPosition))
         return tuple(newPosition)

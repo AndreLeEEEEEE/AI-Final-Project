@@ -23,14 +23,12 @@ def PlayerArmyTurn(statusBook):
     print("---------Player turn start---------")
     for player in statusBook["Players"]:
         if not player.getDead(): player.startTurn()
-    print(levelMap)
     return unitCount(statusBook)
 
 def EnemyArmyTurn(statusBook):
     print("---------Enemy turn start---------")
     for enemy in statusBook["Enemies"]:
         if not enemy.getDead(): enemy.startTurn()
-    print(levelMap)
     return unitCount(statusBook)
 
 def startGame(statusBook, playerCount, enemyCount):
@@ -44,14 +42,14 @@ def startGame(statusBook, playerCount, enemyCount):
             playerCount, enemyCount = EnemyArmyTurn(statusBook)
         # If any Lord player unit died
         if not checkLords(statusBook):
-            endCondition = "A Lord unit has died."
+            endCondition = "\nA Lord unit has died."
             break
         isPlayerTurn = not(isPlayerTurn)
 
     if playerCount <= 0:
-        endCondition = "The player army was routed."
+        endCondition = "\nThe player army was routed."
     elif enemyCount <= 0:
-        endCondition = "The enemy army was routed."
+        endCondition = "\nThe enemy army was routed."
         win = True
 
     return (endCondition, win)
@@ -59,11 +57,10 @@ def startGame(statusBook, playerCount, enemyCount):
 
 def main():
     # Create enemy units
-    enemyID = 97
-    Enemies = [EnemyUnit(10, chr(enemyID+create)) for create in range(1)]
+    Enemies = [EnemyUnit(10) for create in range(2)]
 
     # Create player units
-    Players = [PlayerUnit("Eliwood", 10, chr(65))]
+    Players = [PlayerUnit("Hector", 10), PlayerUnit("Serra", 10)]
 
     # Spawn all units on the map
     rowNum = len(levelMap)
@@ -87,11 +84,9 @@ def main():
                 enemyAlloc += 1
     
     endMessage, win = startGame(statusBook, len(Players), len(Enemies))
-    if win:
-        print("\nThe player army has won!")
-    else:
-        print("\nThe enemy army has won.")
     print(endMessage)
+    if win: print("The player army has won!")
+    else: print("The enemy army has won.")
 
     
 if __name__ == "__main__":

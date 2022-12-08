@@ -19,7 +19,7 @@ from Algorithms.Astar import manhattan_dist
 import random
 
 class EnemyUnit:
-    def __init__(self, level, id, boss=False):
+    def __init__(self, level, boss=False):
         self._class = ""
         self._boss = boss
         # Set unit level and random class
@@ -107,7 +107,6 @@ class EnemyUnit:
             "SKL_Growth": self._class.SKL_Growth,
         }
         self._side = 2
-        self._id = id
         # self._type handled here
         if self._name == "Cleric" or self._name == "Troubadour":
             self._type = "Support"
@@ -119,9 +118,6 @@ class EnemyUnit:
         # Where the unit currently is
         self._tile = (0, 0)
         self._dead = False
-
-    def get_id(self):
-        return self._id
 
     def get_side(self):
         return self._side
@@ -189,6 +185,8 @@ class EnemyUnit:
             # Move to that tile, may or may not reach tile
             newPosition = moveTowardsTarget(levelMap, self._tile, 
                                             result, self._stats["MOV"])
+
+            print(f"{self._name} moved from {self._tile} to {newPosition}")
             levelMap[self._tile[0]][self._tile[1]] = '_'
             self.setTile(newPosition)
             levelMap[newPosition[0]][newPosition[1]] = self
@@ -244,8 +242,6 @@ class EnemyUnit:
         attack: int = self._weapon["MT"]
         if self._weapon["type"] == "STR": attack += self._stats["STR"]
         elif self._weapon["type"] == "MAG": attack += self._stats["MAG"]
-        # If weapon is a stave
-        if not self._weapon["offense"]: attack *= -1
 
         return attack
 
@@ -266,7 +262,8 @@ class EnemyUnit:
     def takeDMG(self, DMG, damageType, heal):
         """Handle taking damage."""
         if heal:
-            self._stats["HP"] -= DMG
+            self._stats["HP"] += DMG
+            print(f"{DMG} health healed")
             # Prevent excess HP via healing
             if self._stats["HP"] > self._stats["MaxHP"]:
                 self._stats["HP"] = self._stats["MaxHP"]
@@ -274,12 +271,13 @@ class EnemyUnit:
         else:
             if damageType == "STR":
                 leftoverDMG = DMG - self._stats["DEF"]
-                if leftoverDMG >= 0:
-                    self._stats["HP"] -= leftoverDMG
+                if leftoverDMG >= 0: self._stats["HP"] -= leftoverDMG
+                else: leftoverDMG = 0
             elif damageType == "MAG":
                 leftoverDMG = DMG - self._stats["RES"]
-                if leftoverDMG >= 0:
-                    self._stats["HP"] -= leftoverDMG
+                if leftoverDMG >= 0: self._stats["HP"] -= leftoverDMG
+                else: leftoverDMG = 0
+            print(f"{leftoverDMG} damage done")
             if self._stats["HP"] <= 0:
                 return self.die()
         

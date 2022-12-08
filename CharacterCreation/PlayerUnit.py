@@ -1,6 +1,7 @@
-from PlayerUnits.Eliwood import Eliwood
 from PlayerUnits.Hector import Hector
 from PlayerUnits.Kent import Kent
+from PlayerUnits.Nino import Nino
+from PlayerUnits.Rebecca import Rebecca
 from PlayerUnits.Sain import Sain
 from PlayerUnits.Serra import Serra
 from Maps.testMapThree import testMapThree as levelMap
@@ -10,15 +11,16 @@ from Algorithms.Astar import manhattan_dist
 import random
 
 characters = {
-    "Eliwood": Eliwood(),
     "Hector": Hector(),
     "Kent": Kent(),
+    "Nino": Nino(),
+    "Rebecca": Rebecca(),
     "Sain": Sain(),
-    "Serra": Serra()
+    "Serra": Serra(),
 }
 
 class PlayerUnit:
-    def __init__(self, chr, level, id):
+    def __init__(self, chr, level):
         self._name = chr
         # Is string
         self._class = characters[chr]._class
@@ -44,7 +46,6 @@ class PlayerUnit:
             "SKL_Growth": characters[chr].SKL_Growth,
         }
         self._side = 1
-        self._id = id
         self._type = characters[chr].type
         # self._state handled here
         if characters[chr].type == "Offensive":
@@ -55,9 +56,6 @@ class PlayerUnit:
         self._item = characters[chr].starting_items[1]
         self._tile = (0, 0)
         self._dead = False
-
-    def get_id(self):
-        return self._id
 
     def get_side(self):
         return self._side
@@ -105,7 +103,13 @@ class PlayerUnit:
         if self._stats["HP"] <= (self._stats["MaxHP"]/2):
             print(f"{self._name} is retreating")
             self._state = "retreat"
-            # Insert code to move away from enemy
+            # Fall back to retreat tile
+            newPosition = moveTowardsTarget(levelMap, self._tile, 
+                                            (6, 7), self._stats["MOV"])
+            print(f"{self._name} moved from {self._tile} to {newPosition}")
+            levelMap[self._tile[0]][self._tile[1]] = '_'
+            self.setTile(newPosition)
+            levelMap[newPosition[0]][newPosition[1]] = self
             # Use healing item if still available
             if self._item["Uses"] > 0:
                 print(f"{self._name} used their vulnerary")
@@ -116,7 +120,6 @@ class PlayerUnit:
                 self._item["Uses"] -=1
         elif self._type == "Offensive":
             self._state = "aggro"
-            print(f"{self._name} is advancing")
             self.moveToTarget(2)
         # Type is support
         else:
@@ -131,6 +134,7 @@ class PlayerUnit:
             newPosition = moveTowardsTarget(levelMap, self._tile, 
                                             result, self._stats["MOV"])
             
+            print(f"{self._name} moved from {self._tile} to {newPosition}")
             levelMap[self._tile[0]][self._tile[1]] = '_'
             self.setTile(newPosition)
             levelMap[newPosition[0]][newPosition[1]] = self
@@ -186,8 +190,6 @@ class PlayerUnit:
         attack: int = self._weapon["MT"]
         if self._weapon["type"] == "STR": attack += self._stats["STR"]
         elif self._weapon["type"] == "MAG": attack += self._stats["MAG"]
-        # If weapon is a stave
-        if not self._weapon["offense"]: attack *= -1
 
         return attack
 
@@ -208,7 +210,8 @@ class PlayerUnit:
     def takeDMG(self, DMG, damageType, heal):
         """Handle taking damage."""
         if heal:
-            self._stats["HP"] -= DMG
+            self._stats["HP"] += DMG
+            print(f"{DMG} health healed")
             # Prevent excess HP via healing
             if self._stats["HP"] > self._stats["MaxHP"]:
                 self._stats["HP"] = self._stats["MaxHP"]
@@ -216,12 +219,13 @@ class PlayerUnit:
         else:
             if damageType == "STR":
                 leftoverDMG = DMG - self._stats["DEF"]
-                if leftoverDMG >= 0:
-                    self._stats["HP"] -= leftoverDMG
+                if leftoverDMG >= 0: self._stats["HP"] -= leftoverDMG
+                else: leftoverDMG = 0
             elif damageType == "MAG":
                 leftoverDMG = DMG - self._stats["RES"]
-                if leftoverDMG >= 0:
-                    self._stats["HP"] -= leftoverDMG
+                if leftoverDMG >= 0: self._stats["HP"] -= leftoverDMG
+                else: leftoverDMG = 0
+            print(f"{leftoverDMG} damage done")
             if self._stats["HP"] <= 0:
                 return self.die()
         
