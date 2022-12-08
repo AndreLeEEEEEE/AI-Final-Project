@@ -17,3 +17,9 @@ The player AI will have three states: aggro, retreat, and heal
 Offensive units will use the breadth-first algorithm to find the nearest enemy unit to attack.
 Support units will use the breadth-first algorithm to find the nearest injured ally unit to heal.
 All units will use the A* algorithm to move to their target.
+
+- [ ] Put the unit rosters in a text file
+- [ ] Put the output of all print statements and the map into a different text file.
+- [ ] Switch in the new map
+- [ ] Spawn more units
+- [ ] Display coordinates on the map as cartesian quadrant I coordinates
