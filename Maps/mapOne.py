@@ -1,6 +1,6 @@
 # Initialize empty space
 mapOne = [[0 for col in range(18)] for row in range(17)]
-# Set enemy spawn points
+# Set enemy spawn points: 12 points
 mapOne[6][3] = 2
 mapOne[10][2] = 2
 mapOne[10][5] = 2
@@ -13,17 +13,17 @@ mapOne[13][9] = 2
 mapOne[14][7] = 2
 mapOne[14][16] = 2
 mapOne[15][9] = 2
-# Set player spawn points
+# Set player spawn points: 6 points
 mapOne[2][12] = 1
 mapOne[3][11] = 1
 mapOne[3][14] = 1
-mapOne[3][15] = 1
+#mapOne[3][15] = 1
 mapOne[4][13] = 1
-mapOne[4][15] = 1
-mapOne[4][16] = 1
+#mapOne[4][15] = 1
+#mapOne[4][16] = 1
 mapOne[5][12] = 1
 mapOne[5][13] = 1
-mapOne[5][17] = 1
+#mapOne[5][17] = 1
 # Set walls
 mapOne[0][0] = 3
 mapOne[0][1] = 3
@@ -39,7 +39,8 @@ mapOne[0][11] = 3
 mapOne[0][12] = 3
 mapOne[0][15] = 3
 mapOne[0][16] = 3
-mapOne[0][17] = 3
+# The retreat tile
+#mapOne[0][17] = 3
 mapOne[1][0] = 3
 mapOne[1][1] = 3
 mapOne[1][2] = 3

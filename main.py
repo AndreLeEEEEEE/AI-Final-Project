@@ -3,7 +3,8 @@ from CharacterCreation.PlayerUnit import PlayerUnit
 from Maps.testMapThree import testMapThree as levelMap
 from MetaInfo.statusBook import statusBook
 from Algorithms.BFS import *
-import copy
+from Results.Write import *
+import os
 
 def checkLords(statusBook):
     lords = 0
@@ -20,13 +21,13 @@ def unitCount(statusBook):
     return (playersLeft, enemiesLeft)
 
 def PlayerArmyTurn(statusBook):
-    print("---------Player turn start---------")
+    write("---------Player turn start---------")
     for player in statusBook["Players"]:
         if not player.getDead(): player.startTurn()
     return unitCount(statusBook)
 
 def EnemyArmyTurn(statusBook):
-    print("---------Enemy turn start---------")
+    write("---------Enemy turn start---------")
     for enemy in statusBook["Enemies"]:
         if not enemy.getDead(): enemy.startTurn()
     return unitCount(statusBook)
@@ -40,22 +41,26 @@ def startGame(statusBook, playerCount, enemyCount):
             playerCount, enemyCount = PlayerArmyTurn(statusBook)
         else:
             playerCount, enemyCount = EnemyArmyTurn(statusBook)
+        writeMap(levelMap)
         # If any Lord player unit died
         if not checkLords(statusBook):
-            endCondition = "\nA Lord unit has died."
+            endCondition = "A Lord unit has died."
             break
         isPlayerTurn = not(isPlayerTurn)
 
     if playerCount <= 0:
-        endCondition = "\nThe player army was routed."
+        endCondition = "The player army was routed."
     elif enemyCount <= 0:
-        endCondition = "\nThe enemy army was routed."
+        endCondition = "The enemy army was routed."
         win = True
 
     return (endCondition, win)
 
-
 def main():
+    # Delete old text files in Results
+    if os.path.exists("Results/roster.txt"): os.remove("Results/roster.txt")
+    if os.path.exists("Results/turns.txt"): os.remove("Results/turns.txt")
+
     # Create enemy units
     Enemies = [EnemyUnit(10) for create in range(2)]
 
@@ -74,19 +79,25 @@ def main():
                 statusBook["Players"].append(Players[playerAlloc])
                 Players[playerAlloc].setTile((i, j))
                 Players[playerAlloc].levelUp()
+                writeUnit(Players[playerAlloc])
                 if Players[playerAlloc].getClass() == "Lord": statusBook["Lords"] += 1
                 playerAlloc += 1
             elif levelMap[i][j] == 2:
                 levelMap[i][j] = Enemies[enemyAlloc]
                 statusBook["Enemies"].append(Enemies[enemyAlloc])
                 Enemies[enemyAlloc].setTile((i, j))
-                Enemies[enemyAlloc].levelUp() 
+                Enemies[enemyAlloc].levelUp()
+                writeUnit(Enemies[enemyAlloc])
                 enemyAlloc += 1
     
+    write("1 is a player unit\n2 is an enemy unit\n3 is an untraversable wall\n")
+    write("Inital state of the level:")
+    writeMap(levelMap)
     endMessage, win = startGame(statusBook, len(Players), len(Enemies))
-    print(endMessage)
-    if win: print("The player army has won!")
-    else: print("The enemy army has won.")
+    write("Result:")
+    write(endMessage)
+    if win: write("The player army has won!")
+    else: write("The enemy army has won.")
 
     
 if __name__ == "__main__":

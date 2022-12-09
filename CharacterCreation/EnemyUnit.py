@@ -16,6 +16,8 @@ from Maps.testMapThree import testMapThree as levelMap
 from Algorithms.BFS import *
 from Algorithms.Astar import moveTowardsTarget
 from Algorithms.Astar import manhattan_dist
+from Algorithms.Translate import translate
+from Results.Write import write
 import random
 
 class EnemyUnit:
@@ -174,7 +176,7 @@ class EnemyUnit:
             result = BFS(levelMap, self._tile, target,
                             self._weapon["RNG"], self._side)
         if result:
-            print("The", self._name, "has aggroed")
+            write(f"The {self._name} has aggroed")
             self._state = "aggro"
             self.moveToTarget(target)
 
@@ -186,7 +188,7 @@ class EnemyUnit:
             newPosition = moveTowardsTarget(levelMap, self._tile, 
                                             result, self._stats["MOV"])
 
-            print(f"{self._name} moved from {self._tile} to {newPosition}")
+            write(f"{self._name} moved from {translate(self._tile)} to {translate(newPosition)}")
             levelMap[self._tile[0]][self._tile[1]] = '_'
             self.setTile(newPosition)
             levelMap[newPosition[0]][newPosition[1]] = self
@@ -205,15 +207,15 @@ class EnemyUnit:
         # Initial attack
         # Always triggers
         if self._type == "Offensive":
-            print(f"The {self._name} attacks {unitTarget._name}")
+            write(f"The {self._name} attacks {unitTarget._name}")
         else:
-            print(f"The {self._name} heals the {unitTarget._name}")
+            write(f"The {self._name} heals the {unitTarget._name}")
         if random.randrange(1, 101) < self.calculateAccuracy(unitTarget):
             heal = False if self._weapon["offense"] else True
             if unitTarget.takeDMG(attack, self._weapon["type"], heal):
                 # Stop combat if the target dies
                 return
-        else: print(f"The {self._name}'s attack missed")
+        else: write(f"The {self._name}'s attack missed")
         # Counterattack
         # Support units cannot defend themselves
         # Don't trigger a counterattack when healing
@@ -221,21 +223,21 @@ class EnemyUnit:
         if (unitTarget.getType() == "Offensive" 
             and self._type == "Offensive"
             and set(unitTarget.getRng()) & set(self.getRngInUse(unitTarget))):
-            print(f"{unitTarget._name} counterattacks")
+            write(f"{unitTarget._name} counterattacks")
             if random.randrange(1, 101) < unitTarget.calculateAccuracy(self):
                 if self.takeDMG(unitTarget.calculateAttack(), unitTarget._weapon["type"], False):
                     # Stop combat if the unit dies
                     return
-            else: print(f"{unitTarget._name}'s attack missed")
+            else: write(f"{unitTarget._name}'s attack missed")
         # Follow-up attack
         # Do not make a follow-up attack for healing
         if spdDiff >= 4 and self._type == "Offensive":
             if random.randrange(1, 101) < self.calculateAccuracy(unitTarget):
-                print(f"The {self._name} performs a follow-up attack")
+                write(f"The {self._name} performs a follow-up attack")
                 if unitTarget.takeDMG(attack, self._weapon["type"], False):
                     # Stop combat if the target dies
                     return
-            else: print(f"The {self._name}'s attack missed")
+            else: write(f"The {self._name}'s attack missed")
 
     def calculateAttack(self):
         """Get the attack value."""
@@ -263,7 +265,7 @@ class EnemyUnit:
         """Handle taking damage."""
         if heal:
             self._stats["HP"] += DMG
-            print(f"{DMG} health healed")
+            write(f"{DMG} health healed")
             # Prevent excess HP via healing
             if self._stats["HP"] > self._stats["MaxHP"]:
                 self._stats["HP"] = self._stats["MaxHP"]
@@ -277,7 +279,7 @@ class EnemyUnit:
                 leftoverDMG = DMG - self._stats["RES"]
                 if leftoverDMG >= 0: self._stats["HP"] -= leftoverDMG
                 else: leftoverDMG = 0
-            print(f"{leftoverDMG} damage done")
+            write(f"{leftoverDMG} damage done")
             if self._stats["HP"] <= 0:
                 return self.die()
         
@@ -288,6 +290,6 @@ class EnemyUnit:
         # Remove self from map
         levelMap[i][j] = '_'
         self._dead = True
-        print(f"The {self._name} died")
+        write(f"The {self._name} died")
 
         return True

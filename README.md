@@ -18,8 +18,11 @@ Offensive units will use the breadth-first algorithm to find the nearest enemy u
 Support units will use the breadth-first algorithm to find the nearest injured ally unit to heal.
 All units will use the A* algorithm to move to their target.
 
-- [ ] Put the unit rosters in a text file
-- [ ] Put the output of all print statements and the map into a different text file.
+- [x] Put the unit rosters in a text file
+- [x] Put the output of all print statements and the map into a different text file.
 - [ ] Switch in the new map
 - [ ] Spawn more units
-- [ ] Display coordinates on the map as cartesian quadrant I coordinates
+- [x] Display coordinates on the map as chess coordinates
+- [ ] Put in boss tile
+- [x] Delete text files in Results on start
+- [ ] Implement new retreat tile in PlayerUnit.py
