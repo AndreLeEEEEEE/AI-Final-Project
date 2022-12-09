@@ -20,9 +20,12 @@ All units will use the A* algorithm to move to their target.
 
 - [x] Put the unit rosters in a text file
 - [x] Put the output of all print statements and the map into a different text file.
-- [ ] Switch in the new map
-- [ ] Spawn more units
+- [x] Switch in the new map
+- [x] Spawn more units
 - [x] Display coordinates on the map as chess coordinates
-- [ ] Put in boss tile
+- [x] Put in boss tile
 - [x] Delete text files in Results on start
-- [ ] Implement new retreat tile in PlayerUnit.py
+- [x] Implement new retreat tile in PlayerUnit.py
+- [x] Change how walls are written
+- [x] Report who on the winning side survived
+- [x] Report how many turns the game took

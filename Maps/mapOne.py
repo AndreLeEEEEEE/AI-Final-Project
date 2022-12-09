@@ -1,8 +1,9 @@
 # Initialize empty space
-mapOne = [[0 for col in range(18)] for row in range(17)]
+mapOne = [['_' for col in range(18)] for row in range(17)]
 # Set enemy spawn points: 12 points
 mapOne[6][3] = 2
-mapOne[10][2] = 2
+# This is the boss tile
+mapOne[10][2] = 4
 mapOne[10][5] = 2
 mapOne[10][17] = 2
 mapOne[11][1] = 2
@@ -39,8 +40,7 @@ mapOne[0][11] = 3
 mapOne[0][12] = 3
 mapOne[0][15] = 3
 mapOne[0][16] = 3
-# The retreat tile
-#mapOne[0][17] = 3
+mapOne[0][17] = 3
 mapOne[1][0] = 3
 mapOne[1][1] = 3
 mapOne[1][2] = 3

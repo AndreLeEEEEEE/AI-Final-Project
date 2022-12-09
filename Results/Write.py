@@ -32,10 +32,12 @@ def writeMap(map):
         colNum = len(map[0])
         for i in range(rowNum):
             # Print numbers on the first column
-            f.write(str((i - 17) * -1) + " ")
+            index = (i - 17) * -1
+            if index < 10: f.write(str(index) + "  ")
+            else: f.write(str(index) + " ")
             for j in range(colNum):
                 if map[i][j] == '_': cell = "_ "
-                elif map[i][j] == 3: cell = "3 "
+                elif map[i][j] == 3: cell = "# "
                 elif map[i][j].get_side() == 1: cell = "1 "
                 elif map[i][j].get_side() == 2: cell = "2 "
                 f.write(cell)

@@ -12,7 +12,7 @@ from Classes.Pirate import Pirate
 from Classes.Soldier import Soldier
 from Classes.Thief import Thief
 from Classes.Troubadour import Troubadour
-from Maps.testMapThree import testMapThree as levelMap
+from Maps.mapOne import mapOne as levelMap
 from Algorithms.BFS import *
 from Algorithms.Astar import moveTowardsTarget
 from Algorithms.Astar import manhattan_dist
@@ -141,6 +141,9 @@ class EnemyUnit:
 
     def getDead(self):
         return self._dead
+
+    def getName(self):
+        return self._name
 
     def levelUp(self):
         for add in range(self._level):

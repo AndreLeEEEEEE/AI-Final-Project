@@ -4,7 +4,7 @@ from PlayerUnits.Nino import Nino
 from PlayerUnits.Rebecca import Rebecca
 from PlayerUnits.Sain import Sain
 from PlayerUnits.Serra import Serra
-from Maps.testMapThree import testMapThree as levelMap
+from Maps.mapOne import mapOne as levelMap
 from Algorithms.BFS import *
 from Algorithms.Astar import moveTowardsTarget
 from Algorithms.Astar import manhattan_dist
@@ -83,6 +83,9 @@ class PlayerUnit:
     def getDead(self):
         return self._dead
 
+    def getName(self):
+        return self._name
+
     def levelUp(self):
         for add in range(self._level):
             if random.random() < self._growthRates["HP_Growth"]:
@@ -107,7 +110,7 @@ class PlayerUnit:
             self._state = "retreat"
             # Fall back to retreat tile
             newPosition = moveTowardsTarget(levelMap, self._tile, 
-                                            (6, 7), self._stats["MOV"])
+                                            (0, 14), self._stats["MOV"])
             write(f"{self._name} moved from {translate(self._tile)} to {translate(newPosition)}")
             levelMap[self._tile[0]][self._tile[1]] = '_'
             self.setTile(newPosition)

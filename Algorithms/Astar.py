@@ -138,6 +138,8 @@ def moveTowardsTarget(field: list, unit: tuple, target: tuple, mov: int):
     # Use Astar if the target hasn't been reached
     else:
         path = Astar(field, [Tile(unit)], target)
+        # If no path exists, stay in place
+        if path is None: return unit
         newPosition = list(unit)
         for m in range(mov):
             # Prevent invalid indexing when the unit needs less
