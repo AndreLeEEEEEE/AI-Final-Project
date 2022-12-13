@@ -29,3 +29,4 @@ All units will use the A* algorithm to move to their target.
 - [x] Change how walls are written
 - [x] Report who on the winning side survived
 - [x] Report how many turns the game took
+- [ ] Let defending units perform follow-up attacks
